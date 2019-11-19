@@ -9,6 +9,7 @@
        android:padding="20dp"
        android:text="category"
        android:background="@color/colorWhite"
+       android:hapticFeedbackEnabled="true"
        android:textColor="@color/colorAccent"
 
        android:id="@+id/categoryTask"/>
