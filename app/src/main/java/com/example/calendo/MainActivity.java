@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
-    TextView myTitle, myDescription;
+    TextView myTitle, myDescription, myDue;
     CheckBox checkBox;
     ListView listView;
     String[] mTitle = {"Laundry","Homework","Group Meeting","Shopping", "Dating", "Assignment HCI Seminar"};
@@ -42,8 +42,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-              "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-              "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"};
+            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"};
+
+    String[] mDue = {"12/12/2019", "12/12/2019", "13/12/2019", "14/12/2019", "15/12/2019", "16/12/2019"};
 
 
 
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listView = findViewById(R.id.listView);
         checkBox = findViewById(R.id.checkboxTask);
 
-        MyAdapter adapter = new MyAdapter(this, mTitle, mDescription);
+        MyAdapter adapter = new MyAdapter(this, mTitle, mDescription, mDue);
         listView.setAdapter(adapter);
 
         //Link UI elements
@@ -166,13 +168,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Context context;
         String rTitle[];
         String rDescription[];
+        String rDue[];
         int rImgs[];
 
-        MyAdapter (Context c, String title[], String description[]) {
+        MyAdapter (Context c, String title[], String description[], String due[]) {
             super(c, R.layout.row, R.id.titleTodo, title);
             this.context = c;
             this.rTitle = title;
             this.rDescription = description;
+            this.rDue = due;
 
 
         }
@@ -184,10 +188,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             View row = layoutInflater.inflate(R.layout.row, parent, false);
 
             myTitle = row.findViewById(R.id.titleTodo);
+            myDue = row.findViewById(R.id.dueTodo);
             myDescription = row.findViewById(R.id.descriptionTodo);
 
             myTitle.setText(rTitle[position]);
+            myDue.setText(rDue[position]);
             myDescription.setText(rDescription[position]);
+
 
             return row;
         }
