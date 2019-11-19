@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,8 +39,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView myTitle, myDescription, myDue;
     CheckBox checkBox;
     ListView listView;
-    String[] mTitle = {"Laundry","Homework","Group Meeting","Shopping", "Dating", "Assignment HCI Seminar"};
-    String [] mDescription ={"ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+    RecyclerView recyclerView;
+    String[] mCategory = {"All", "Todo", "Reminder", "Appointment", "Personal Goals"};
+    String[] mTitle = {"Laundry", "Homework", "Group Meeting", "Shopping", "Dating", "Assignment HCI Seminar"};
+    String[] mDescription = {"ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
@@ -48,16 +52,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String[] mDue = {"12/12/2019", "12/12/2019", "13/12/2019", "14/12/2019", "15/12/2019", "16/12/2019"};
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.listView);
+        recyclerView = findViewById(R.id.categoryList);
         checkBox = findViewById(R.id.checkboxTask);
 
         MyAdapter adapter = new MyAdapter(this, mTitle, mDescription, mDue);
         listView.setAdapter(adapter);
+
+        HorizontalAdapter horizontalAdapter = new HorizontalAdapter(this, mCategory);
+        recyclerView.setAdapter(horizontalAdapter);
+
+        RecyclerView MyRecyclerView;
+
+
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this);
+        MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        if (mCategory.length > 0 & recyclerView != null) {
+            recyclerView.setAdapter(new HorizontalAdapter(this, mCategory));
+        }
+        recyclerView.setLayoutManager(MyLayoutManager);
+
 
         //Link UI elements
         fab = findViewById(R.id.fab);
@@ -80,18 +99,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "Position" + position, Toast.LENGTH_SHORT).show();
                 checkBox = view.findViewById(R.id.checkboxTask);
-                if(checkBox.isChecked()) {
+                if (checkBox.isChecked()) {
                     checkBox.setChecked(false);
                     view.setBackgroundColor(Color.WHITE);
-                }
-                else{
+                } else {
                     checkBox.setChecked(true);
                     view.setBackgroundColor(Color.LTGRAY);
 
                 }
-
 
 
             }
@@ -158,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void AddNewTask(View view) {
-        Intent intent = new Intent (MainActivity.this, AddNewTask.class);
+        Intent intent = new Intent(MainActivity.this, AddNewTask.class);
         startActivity(intent);
 
     }
@@ -169,9 +185,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String rTitle[];
         String rDescription[];
         String rDue[];
-        int rImgs[];
 
-        MyAdapter (Context c, String title[], String description[], String due[]) {
+
+        MyAdapter(Context c, String title[], String description[], String due[]) {
             super(c, R.layout.row, R.id.titleTodo, title);
             this.context = c;
             this.rTitle = title;
@@ -184,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row = layoutInflater.inflate(R.layout.row, parent, false);
 
             myTitle = row.findViewById(R.id.titleTodo);
@@ -200,3 +216,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 }
+
+
