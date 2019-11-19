@@ -65,10 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         HorizontalAdapter horizontalAdapter = new HorizontalAdapter(this, mCategory);
         recyclerView.setAdapter(horizontalAdapter);
-
-        RecyclerView MyRecyclerView;
-
-
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this);
         MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -134,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new CalendarFragment()).commit();
             listView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
 
             return true;
         }
@@ -150,12 +147,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new StatisticsFragment()).commit();
                 listView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+
 
                 break;
             case R.id.nav_account:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AccountFragment()).commit();
                 listView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+
 
                 break;
         }
