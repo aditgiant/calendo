@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,14 +34,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
+    TextView myTitle, myDescription;
+    CheckBox checkBox;
     ListView listView;
     String[] mTitle = {"Laundry","Homework","Group Meeting","Shopping", "Dating", "Assignment HCI Seminar"};
     String [] mDescription ={"ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
             "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-  "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-  "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"};
+              "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
+              "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"};
 
 
 
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.listView);
+        checkBox = findViewById(R.id.checkboxTask);
+
         MyAdapter adapter = new MyAdapter(this, mTitle, mDescription);
         listView.setAdapter(adapter);
 
@@ -73,6 +79,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, "Position" + position, Toast.LENGTH_SHORT).show();
+                checkBox = view.findViewById(R.id.checkboxTask);
+                if(checkBox.isChecked()) {
+                    checkBox.setChecked(false);
+                    view.setBackgroundColor(Color.WHITE);
+                }
+                else{
+                    checkBox.setChecked(true);
+                    view.setBackgroundColor(Color.LTGRAY);
+
+                }
+
 
 
             }
@@ -166,14 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View row = layoutInflater.inflate(R.layout.row, parent, false);
 
-            TextView myTitle = row.findViewById(R.id.titleTodo);
-            TextView myDescription = row.findViewById(R.id.descriptionTodo);
+            myTitle = row.findViewById(R.id.titleTodo);
+            myDescription = row.findViewById(R.id.descriptionTodo);
 
             myTitle.setText(rTitle[position]);
             myDescription.setText(rDescription[position]);
-
-
-
 
             return row;
         }
