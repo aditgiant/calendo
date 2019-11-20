@@ -22,11 +22,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.calendo.fragments.AccountFragment;
+import com.example.calendo.fragments.StatisticsFragment;
+import com.example.calendo.fragments.TodolistFragment;
+import com.example.calendo.fragments.calendar.CalendarFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -36,42 +38,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
-    TextView myTitle, myDescription, myDue;
-    CheckBox checkBox;
-    ListView listView;
-    RecyclerView recyclerView;
-    String[] mCategory = {"All", "Todo", "Reminder", "Appointment", "Personal Goals"};
-    String[] mTitle = {"Laundry", "Homework", "Group Meeting", "Shopping", "Dating", "Assignment HCI Seminar"};
-    String[] mDescription = {"ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"};
 
-    String[] mDue = {"12/12/2019", "12/12/2019", "13/12/2019", "14/12/2019", "15/12/2019", "16/12/2019"};
+    private Boolean calendarViewOn= false;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView = findViewById(R.id.listView);
-        recyclerView = findViewById(R.id.categoryList);
-        checkBox = findViewById(R.id.checkboxTask);
-
-        MyAdapter adapter = new MyAdapter(this, mTitle, mDescription, mDue);
-        listView.setAdapter(adapter);
-
-        HorizontalAdapter horizontalAdapter = new HorizontalAdapter(this, mCategory);
-        recyclerView.setAdapter(horizontalAdapter);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this);
-        MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        if (mCategory.length > 0 & recyclerView != null) {
-            recyclerView.setAdapter(new HorizontalAdapter(this, mCategory));
-        }
-        recyclerView.setLayoutManager(MyLayoutManager);
 
 
         //Link UI elements
@@ -90,24 +65,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Make the toggle rotating
         actionBarDrawerToggle.syncState();
 
-        listView.setItemsCanFocus(true);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                checkBox = view.findViewById(R.id.checkboxTask);
-                if (checkBox.isChecked()) {
-                    checkBox.setChecked(false);
-                    view.setBackgroundColor(Color.WHITE);
-                } else {
-                    checkBox.setChecked(true);
-                    view.setBackgroundColor(Color.LTGRAY);
-
-                }
-
-
-            }
-        });
+        //Load the correct home pages listView or Calendar View
+        if(calendarViewOn){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new CalendarFragment()).commit();
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new TodolistFragment()).commit();
+        }
 
     }
 
@@ -122,18 +87,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        // as you specify a parent activity in AndroidManifest.xml
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.calendar_button) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new CalendarFragment()).commit();
-            listView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.GONE);
+        switch (item.getItemId()) {
+            case R.id.calendar_button:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new CalendarFragment()).commit();
 
-            return true;
+                calendarViewOn=true;
+
+
+                break;
+            case R.id.todolist_button:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new TodolistFragment()).commit();
+
+
+                calendarViewOn= false;
+
+                break;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -146,16 +120,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_statistics:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new StatisticsFragment()).commit();
-                listView.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
 
 
                 break;
             case R.id.nav_account:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AccountFragment()).commit();
-                listView.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
 
 
                 break;
@@ -178,43 +148,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(MainActivity.this, AddNewTask.class);
         startActivity(intent);
 
-    }
-
-    class MyAdapter extends ArrayAdapter<String> {
-
-        Context context;
-        String rTitle[];
-        String rDescription[];
-        String rDue[];
-
-
-        MyAdapter(Context c, String title[], String description[], String due[]) {
-            super(c, R.layout.row, R.id.titleTodo, title);
-            this.context = c;
-            this.rTitle = title;
-            this.rDescription = description;
-            this.rDue = due;
-
-
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
-
-            myTitle = row.findViewById(R.id.titleTodo);
-            myDue = row.findViewById(R.id.dueTodo);
-            myDescription = row.findViewById(R.id.descriptionTodo);
-
-            myTitle.setText(rTitle[position]);
-            myDue.setText(rDue[position]);
-            myDescription.setText(rDescription[position]);
-
-
-            return row;
-        }
     }
 }
 

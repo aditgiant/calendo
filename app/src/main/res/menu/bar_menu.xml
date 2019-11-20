@@ -9,5 +9,10 @@
         android:icon="@drawable/ic_calendar"
         android:title="@string/calendar_icon"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/todolist_button"
+        android:icon="@drawable/ic_todolist"
+        android:title="@string/to_do_list_icon"
+        app:showAsAction="always" />
 
 </menu>

@@ -1,4 +1,4 @@
-package com.example.calendo;
+package com.example.calendo.fragments;
 
 
 import android.app.DatePickerDialog;

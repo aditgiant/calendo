@@ -1,4 +1,4 @@
-package com.example.calendo;
+package com.example.calendo.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import com.example.calendo.R;
 
 public class AccountFragment extends Fragment {
 
