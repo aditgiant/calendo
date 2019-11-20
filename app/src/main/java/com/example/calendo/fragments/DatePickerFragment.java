@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
-import com.example.calendo.AddNewTask;
+import com.example.calendo.AddNewTaskActivity;
 import com.example.calendo.MainActivity;
 
 import java.util.Calendar;
@@ -41,7 +41,7 @@ public class DatePickerFragment extends DialogFragment
     @Override
     public void onDateSet(DatePicker datePicker,
                           int year, int month, int day) {
-        AddNewTask activity = (AddNewTask) getActivity();
+        AddNewTaskActivity activity = (AddNewTaskActivity) getActivity();
         activity.processDatePickerResult(year, month, day);
     }
 }

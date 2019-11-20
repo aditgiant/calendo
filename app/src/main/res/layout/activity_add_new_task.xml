@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddNewTask">
+    tools:context=".AddNewTaskActivity">
 
     <EditText
         android:id="@+id/TaskName"
@@ -66,4 +66,6 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <include layout="@layout/floating_button_save"></include>
 </RelativeLayout>

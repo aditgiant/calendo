@@ -1,6 +1,7 @@
-package com.example.calendo.fragments;
+package com.example.calendo.fragments.todolist;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.calendo.AddNewTaskActivity;
 import com.example.calendo.HorizontalAdapter;
 import com.example.calendo.MainActivity;
 import com.example.calendo.R;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TodolistFragment extends Fragment {
     private TextView myTitle, myDescription, myDue;
@@ -26,16 +32,16 @@ public class TodolistFragment extends Fragment {
     private ListView listView;
     private RecyclerView recyclerView;
 
-    String[] mCategory = {"All", "Todo", "Reminder", "Appointment", "Personal Goals"};
-    String[] mTitle = {"Laundry", "Homework", "Group Meeting", "Shopping", "Dating", "Assignment HCI Seminar"};
-    String[] mDescription = {"ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua",
-            "ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua"};
+    //Data
+    private ArrayList<Task> todolist;
+    private ArrayList<String> categories;
 
-    String[] mDue = {"12/12/2019", "12/12/2019", "13/12/2019", "14/12/2019", "15/12/2019", "16/12/2019"};
+
+    //Temp attribute for this long string
+    private static final String temp="ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
+
+
+    public static final int TEXT_REQUEST = 1;
 
 
     @Override
@@ -47,17 +53,44 @@ public class TodolistFragment extends Fragment {
         checkBox = view.findViewById(R.id.checkboxTask);
 
         /*---------- List ----------*/
+        //Fill the todolist with fake tasks
+        todolist = new ArrayList<>();
+        todolist.add(new Task("0", "Laundry", "Todo", temp, "12/12/2019"));
+        todolist.add(new Task("1", "Homework", "Reminder", temp, "12/12/2019"));
+        todolist.add(new Task("2", "Group Meeting", "Appointment", temp, "12/12/2019"));
+        todolist.add(new Task("3", "Shopping", "Todo", temp, "12/12/2019"));
+        todolist.add(new Task("4", "Dating", "Todo", temp, "12/12/2019"));
+        todolist.add(new Task("5", "Assignment HCI Seminar", "Todo", temp, "12/12/2019"));
 
-        MyAdapter adapter = new MyAdapter(this.getContext(), mTitle, mDescription, mDue);
+        //The list of task should be an Array-list, of course the different lists will be retrieved from the DB
+        //I am extracting the lists
+        ArrayList<String> t = new ArrayList<>();
+        ArrayList<String> d = new ArrayList<>();
+        ArrayList<String> dd = new ArrayList<>();
+        for (int i=0; i<todolist.size(); i++){
+            t.add(todolist.get(i).getTitle());
+            d.add(todolist.get(i).getDescription());
+            dd.add(todolist.get(i).getDuedate());
+        }
+
+
+        //Task list
+        MyAdapter adapter = new MyAdapter(this.getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
         listView.setAdapter(adapter);
 
-        HorizontalAdapter horizontalAdapter = new HorizontalAdapter(this.getContext(), mCategory);
+
+        //Fill the categories list with fake categories
+        categories = new ArrayList<>();
+        categories.addAll(Arrays.asList("All", "Todo", "Reminder", "Appointment", "Personal Goals"));
+
+        //Categories list
+        HorizontalAdapter horizontalAdapter = new HorizontalAdapter(this.getContext(), categories.toArray(new String[0]));
         recyclerView.setAdapter(horizontalAdapter);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this.getContext());
         MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        if (mCategory.length > 0 & recyclerView != null) {
-            recyclerView.setAdapter(new HorizontalAdapter(this.getContext(), mCategory));
+        if (categories.size() > 0 & recyclerView != null) {
+            recyclerView.setAdapter(new HorizontalAdapter(this.getContext(), categories.toArray(new String[0])));
         }
 
         recyclerView.setLayoutManager(MyLayoutManager);
@@ -71,25 +104,8 @@ public class TodolistFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //Private class used in the on create method
     private class MyAdapter extends ArrayAdapter<String> {
-
         Context context;
         String rTitle[];
         String rDescription[];

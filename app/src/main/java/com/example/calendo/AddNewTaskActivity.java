@@ -3,19 +3,34 @@ package com.example.calendo;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.calendo.fragments.DatePickerFragment;
+import com.example.calendo.fragments.todolist.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class AddNewTask extends AppCompatActivity {
+public class AddNewTaskActivity extends AppCompatActivity {
+    private FloatingActionButton fab_save;
+    private EditText title;
+    private TextView date;
+    private EditText notes;
+
+    public static final String TASK_TITLE="title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
+
+        //Link UI elements
+        fab_save = findViewById(R.id.fab_save);
+        title = findViewById(R.id.TaskName);
+        date = findViewById(R.id.TaskTimeLabel);
     }
 
     public void showDatePicker(View view) {
@@ -35,4 +50,15 @@ public class AddNewTask extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
+    public void saveTask(View view){
+        //Create intent  for the reply
+        Intent replyIntent = new Intent();
+
+        //Get text
+        replyIntent.putExtra(TASK_TITLE, title.getText().toString());
+        //Add other parameters then
+
+        //Close this activity and back
+        finish();
+    }
 }
