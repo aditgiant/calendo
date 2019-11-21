@@ -21,6 +21,8 @@ import com.example.calendo.fragments.calendar.CalendarFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
+import static com.example.calendo.AddNewTaskActivity.TASK_DESCRIPTION;
 import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
 import static com.example.calendo.fragments.todolist.TodolistFragment.TEXT_REQUEST;
 
@@ -164,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     bundleforFragment = new Bundle();
                     bundleforFragment.putString(TASK_TITLE, data.getStringExtra(TASK_TITLE));
+                    bundleforFragment.putString(TASK_DATE, data.getStringExtra(TASK_DATE));
+                    bundleforFragment.putString(TASK_DESCRIPTION, data.getStringExtra(TASK_DESCRIPTION));
 
                     todolistFragment.putArguments(bundleforFragment);
 

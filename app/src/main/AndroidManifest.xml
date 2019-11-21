@@ -18,8 +18,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddNewTaskActivity"
+        <activity
+            android:name=".AddNewTaskActivity"
             android:label = "Add New Task"
+            android:windowSoftInputMode= "adjustPan"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

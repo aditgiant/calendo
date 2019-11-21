@@ -21,6 +21,9 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private EditText notes;
 
     public static final String TASK_TITLE="title";
+    public static final String TASK_DATE="duedate";
+    public static final String TASK_DESCRIPTION="description";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         fab_save = findViewById(R.id.fab_save);
         title = findViewById(R.id.TaskName);
         date = findViewById(R.id.TaskTimeLabel);
+        notes = findViewById(R.id.notes);
     }
 
     public void showDatePicker(View view) {
@@ -46,8 +50,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 "/" + day_string + "/" + year_string);
         TextView tasktimelabel = findViewById(R.id.TaskTimeLabel);
         tasktimelabel.setText(dateMessage);
-        Toast.makeText(this, "Date selected",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Date selected", Toast.LENGTH_SHORT).show();
     }
 
     public void saveTask(View view){
@@ -56,6 +59,8 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         //Get text
         replyIntent.putExtra(TASK_TITLE, title.getText().toString());
+        replyIntent.putExtra(TASK_DATE, date.getText().toString());
+        replyIntent.putExtra(TASK_DESCRIPTION, notes.getText().toString());
         setResult(RESULT_OK, replyIntent);
         //Add other parameters then
 

@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
+import static com.example.calendo.AddNewTaskActivity.TASK_DESCRIPTION;
 import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
 
 public class TodolistFragment extends Fragment {
@@ -52,16 +54,6 @@ public class TodolistFragment extends Fragment {
         recyclerView = view.findViewById(R.id.categoryList);
         checkBox = view.findViewById(R.id.checkboxTask);
 
-        /*---------- List ----------
-        //Fill the todolist with fake tasks
-
-        todolist.add(new Task("0", "Laundry", "Todo", temp, "12/12/2019"));
-        todolist.add(new Task("1", "Homework", "Reminder", temp, "12/12/2019"));
-        todolist.add(new Task("2", "Group Meeting", "Appointment", temp, "12/12/2019"));
-        todolist.add(new Task("3", "Shopping", "Todo", temp, "12/12/2019"));
-        todolist.add(new Task("4", "Dating", "Todo", temp, "12/12/2019"));
-        todolist.add(new Task("5", "Assignment HCI Seminar", "Todo", temp, "12/12/2019"));*/
-
 
         //Update the list
         todolist = new ArrayList<>();
@@ -84,14 +76,19 @@ public class TodolistFragment extends Fragment {
 
         recyclerView.setLayoutManager(MyLayoutManager);
 
-        /*--------------------*/
 
 
         return view;
     }
 
     public void putArguments(Bundle bundleforFragment) {
-        todolist.add(new Task("#", bundleforFragment.getString(TASK_TITLE), "Todo", temp, "12/12/2019"));
+        todolist.add(new Task("#",
+                    bundleforFragment.getString(TASK_TITLE),
+                    "Todo",
+                    bundleforFragment.getString(TASK_DESCRIPTION),
+                    bundleforFragment.getString(TASK_DATE)));
+
+
         updateTodolist();
 
     }
