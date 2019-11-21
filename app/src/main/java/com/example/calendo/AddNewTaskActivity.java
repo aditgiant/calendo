@@ -6,7 +6,9 @@ import androidx.fragment.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,11 +16,17 @@ import com.example.calendo.fragments.DatePickerFragment;
 import com.example.calendo.fragments.todolist.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 public class AddNewTaskActivity extends AppCompatActivity {
     private FloatingActionButton fab_save;
     private EditText title;
     private TextView date;
     private EditText notes;
+    private Spinner dropdownCategory;
+
+    //Data
+    private ArrayList<String> categories;
 
     public static final String TASK_TITLE="title";
     public static final String TASK_DATE="duedate";
@@ -35,6 +43,21 @@ public class AddNewTaskActivity extends AppCompatActivity {
         title = findViewById(R.id.TaskName);
         date = findViewById(R.id.TaskTimeLabel);
         notes = findViewById(R.id.notes);
+        dropdownCategory = findViewById(R.id.categories);
+
+        //Fill dropdown
+        // you need to have a list of data that you want the spinner to display
+        categories =  new ArrayList<String>();
+        categories.add("To do");
+        categories.add("Reminder");
+        categories.add("Appointment");
+        categories.add("Personal Goals");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropdownCategory.setAdapter(adapter);
+
     }
 
     public void showDatePicker(View view) {
