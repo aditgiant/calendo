@@ -3,10 +3,12 @@ package com.example.calendo.fragments.todolist;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,13 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendo.AddNewTaskActivity;
-import com.example.calendo.HorizontalAdapter;
-import com.example.calendo.MainActivity;
+import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static android.app.Activity.RESULT_OK;
+import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
 
 public class TodolistFragment extends Fragment {
     private TextView myTitle, myDescription, myDue;
@@ -39,10 +42,7 @@ public class TodolistFragment extends Fragment {
 
     //Temp attribute for this long string
     private static final String temp="ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
-
-
     public static final int TEXT_REQUEST = 1;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -52,31 +52,20 @@ public class TodolistFragment extends Fragment {
         recyclerView = view.findViewById(R.id.categoryList);
         checkBox = view.findViewById(R.id.checkboxTask);
 
-        /*---------- List ----------*/
+        /*---------- List ----------
         //Fill the todolist with fake tasks
-        todolist = new ArrayList<>();
+
         todolist.add(new Task("0", "Laundry", "Todo", temp, "12/12/2019"));
         todolist.add(new Task("1", "Homework", "Reminder", temp, "12/12/2019"));
         todolist.add(new Task("2", "Group Meeting", "Appointment", temp, "12/12/2019"));
         todolist.add(new Task("3", "Shopping", "Todo", temp, "12/12/2019"));
         todolist.add(new Task("4", "Dating", "Todo", temp, "12/12/2019"));
-        todolist.add(new Task("5", "Assignment HCI Seminar", "Todo", temp, "12/12/2019"));
-
-        //The list of task should be an Array-list, of course the different lists will be retrieved from the DB
-        //I am extracting the lists
-        ArrayList<String> t = new ArrayList<>();
-        ArrayList<String> d = new ArrayList<>();
-        ArrayList<String> dd = new ArrayList<>();
-        for (int i=0; i<todolist.size(); i++){
-            t.add(todolist.get(i).getTitle());
-            d.add(todolist.get(i).getDescription());
-            dd.add(todolist.get(i).getDuedate());
-        }
+        todolist.add(new Task("5", "Assignment HCI Seminar", "Todo", temp, "12/12/2019"));*/
 
 
-        //Task list
-        MyAdapter adapter = new MyAdapter(this.getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
-        listView.setAdapter(adapter);
+        //Update the list
+        todolist = new ArrayList<>();
+        updateTodolist();
 
 
         //Fill the categories list with fake categories
@@ -101,15 +90,38 @@ public class TodolistFragment extends Fragment {
         return view;
     }
 
+    public void putArguments(Bundle bundleforFragment) {
+        todolist.add(new Task("#", bundleforFragment.getString(TASK_TITLE), "Todo", temp, "12/12/2019"));
+        updateTodolist();
 
+    }
+
+    public void updateTodolist(){
+
+        //The list of task should be an Array-list, of course the different lists will be retrieved from the DB
+        //I am extracting the lists
+        ArrayList<String> t = new ArrayList<>();
+        ArrayList<String> d = new ArrayList<>();
+        ArrayList<String> dd = new ArrayList<>();
+        for (int i=0; i<todolist.size(); i++){
+            t.add(todolist.get(i).getTitle());
+            d.add(todolist.get(i).getDescription());
+            dd.add(todolist.get(i).getDuedate());
+        }
+
+
+        //Task list
+        MyAdapter adapter = new MyAdapter(this.getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
+        listView.setAdapter(adapter);
+    }
 
 
     //Private class used in the on create method
     private class MyAdapter extends ArrayAdapter<String> {
         Context context;
-        String rTitle[];
-        String rDescription[];
-        String rDue[];
+        String[] rTitle;
+        String[] rDescription;
+        String[] rDue;
 
 
         MyAdapter(Context c, String[] title, String[] description, String[] due) {

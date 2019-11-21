@@ -21,6 +21,9 @@ import com.example.calendo.fragments.calendar.CalendarFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
+import static com.example.calendo.fragments.todolist.TodolistFragment.TEXT_REQUEST;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
     private Toolbar toolbar;
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private Boolean calendarViewOn= false;
+    private Bundle bundleforFragment;
+    private TodolistFragment todolistFragment;
 
 
 
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Link UI elements
         fab = findViewById(R.id.fab);
         navigationView = findViewById(R.id.nav_view);
-        toolbar = requireViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //Set the drawer to change the displayed fragment
@@ -59,8 +64,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new CalendarFragment()).commit();
         } else {
+            todolistFragment = new TodolistFragment();
+
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new TodolistFragment()).commit();
+                    todolistFragment).commit();
         }
 
     }
@@ -133,10 +140,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void AddNewTask(View view) {
+    public void addNewTask(View view) {
         Intent intent = new Intent(MainActivity.this, AddNewTaskActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, TEXT_REQUEST);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+        //If it's my response
+        if (requestCode == TEXT_REQUEST) {
+            //If this response is ok
+            if (resultCode == RESULT_OK) {
+
+                //Here I attach the new item to the list
+
+                if(!calendarViewOn){
+                    //Attach to the todolist
+
+                    bundleforFragment = new Bundle();
+                    bundleforFragment.putString(TASK_TITLE, data.getStringExtra(TASK_TITLE));
+
+                    todolistFragment.putArguments(bundleforFragment);
+
+
+
+                }else {
+                    //Attach to the calendar
+                }
+
+            }
+        }else {
+            System.out.println("Not this intent");
+        }
     }
 }
 

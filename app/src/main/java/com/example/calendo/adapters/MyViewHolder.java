@@ -1,8 +1,10 @@
-package com.example.calendo;
+package com.example.calendo.adapters;
 
 import android.view.View;
 import android.widget.Button;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.calendo.R;
 
 public class MyViewHolder extends RecyclerView.ViewHolder {
 

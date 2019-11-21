@@ -1,4 +1,4 @@
-package com.example.calendo;
+package com.example.calendo.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.example.calendo.R;
 
 public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private String[] list;

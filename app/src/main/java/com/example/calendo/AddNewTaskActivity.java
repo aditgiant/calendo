@@ -56,6 +56,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         //Get text
         replyIntent.putExtra(TASK_TITLE, title.getText().toString());
+        setResult(RESULT_OK, replyIntent);
         //Add other parameters then
 
         //Close this activity and back
