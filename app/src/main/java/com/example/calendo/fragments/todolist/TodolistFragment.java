@@ -36,6 +36,7 @@ public class TodolistFragment extends Fragment {
     private CheckBox checkBox;
     private ListView listView;
     private RecyclerView recyclerView;
+    private TextView emptyTodo;
 
     //Data
     private ArrayList<Task> todolist;
@@ -53,11 +54,15 @@ public class TodolistFragment extends Fragment {
         listView = view.findViewById(R.id.listView);
         recyclerView = view.findViewById(R.id.categoryList);
         checkBox = view.findViewById(R.id.checkboxTask);
+        emptyTodo= view.findViewById(R.id.emptyTodo);
+
 
 
         //Update the list
         todolist = new ArrayList<>();
         updateTodolist();
+
+
 
 
         //Fill the categories list with fake categories
@@ -104,6 +109,15 @@ public class TodolistFragment extends Fragment {
             t.add(todolist.get(i).getTitle());
             d.add(todolist.get(i).getDescription());
             dd.add(todolist.get(i).getDuedate());
+        }
+
+        if(todolist.size()>0){
+            emptyTodo.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        }
+        else{
+            emptyTodo.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
         }
 
 

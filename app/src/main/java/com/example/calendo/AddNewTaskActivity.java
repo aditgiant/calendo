@@ -80,14 +80,19 @@ public class AddNewTaskActivity extends AppCompatActivity {
         //Create intent  for the reply
         Intent replyIntent = new Intent();
 
-        //Get text
-        replyIntent.putExtra(TASK_TITLE, title.getText().toString());
-        replyIntent.putExtra(TASK_DATE, date.getText().toString());
-        replyIntent.putExtra(TASK_DESCRIPTION, notes.getText().toString());
-        setResult(RESULT_OK, replyIntent);
-        //Add other parameters then
+        //handle empty input
+        if(!title.getText().toString().equals("") && !date.getText().toString().equals("") && !notes.getText().toString().equals("")){
+            //Get text
+            replyIntent.putExtra(TASK_TITLE, title.getText().toString());
+            replyIntent.putExtra(TASK_DATE, date.getText().toString());
+            replyIntent.putExtra(TASK_DESCRIPTION, notes.getText().toString());
+            setResult(RESULT_OK, replyIntent);
+            //Add other parameters then
+            //Close this activity and back
+            finish();
+        }
 
-        //Close this activity and back
-        finish();
+
+
     }
 }

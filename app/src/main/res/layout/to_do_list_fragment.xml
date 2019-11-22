@@ -9,11 +9,22 @@
         android:id="@+id/categoryList">
     </androidx.recyclerview.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/emptyTodo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="You don't have any task :( "
+        android:textSize="18dp"
+        android:textColor="@color/colorPrimary" />
+
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
         android:background="@color/colorWhite"
-        android:visibility="visible" />
+        android:visibility="invisible" />
+
 
 </LinearLayout>
