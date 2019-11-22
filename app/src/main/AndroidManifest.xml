@@ -26,7 +26,7 @@
         <activity
             android:name=".AddNewTaskActivity"
             android:label = "Add New Task"
-            android:windowSoftInputMode= "adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
