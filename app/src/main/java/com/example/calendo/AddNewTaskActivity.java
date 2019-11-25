@@ -1,10 +1,12 @@
 package com.example.calendo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -14,9 +16,14 @@ import android.widget.Toast;
 
 import com.example.calendo.fragments.DatePickerFragment;
 import com.example.calendo.fragments.todolist.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddNewTaskActivity extends AppCompatActivity {
     private FloatingActionButton fab_save;
@@ -29,8 +36,13 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private ArrayList<String> categories;
 
     public static final String TASK_TITLE="title";
+    public static final String TASK_CATEGORY="category";
     public static final String TASK_DATE="duedate";
     public static final String TASK_DESCRIPTION="description";
+    private static final String TAG = "AddNewTaskActivity";
+
+    //Firestore
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -78,19 +90,49 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
     public void saveTask(View view){
         //Create intent  for the reply
-        Intent replyIntent = new Intent();
+//        Intent replyIntent = new Intent();
+//
+//        //handle empty input
+//        if(!title.getText().toString().equals("") && !date.getText().toString().equals("") && !notes.getText().toString().equals("")){
+//            //Get text
+//            replyIntent.putExtra(TASK_TITLE, title.getText().toString());
+//            replyIntent.putExtra(TASK_DATE, date.getText().toString());
+//            replyIntent.putExtra(TASK_DESCRIPTION, notes.getText().toString());
+//            setResult(RESULT_OK, replyIntent);
+//            //Add other parameters then
+//            //Close this activity and back
+//            finish();
+//        }
 
-        //handle empty input
-        if(!title.getText().toString().equals("") && !date.getText().toString().equals("") && !notes.getText().toString().equals("")){
-            //Get text
-            replyIntent.putExtra(TASK_TITLE, title.getText().toString());
-            replyIntent.putExtra(TASK_DATE, date.getText().toString());
-            replyIntent.putExtra(TASK_DESCRIPTION, notes.getText().toString());
-            setResult(RESULT_OK, replyIntent);
-            //Add other parameters then
-            //Close this activity and back
-            finish();
-        }
+
+        Map<String, Object> todolist = new HashMap<>();
+        todolist.put(TASK_TITLE, title.getText().toString());
+        todolist.put(TASK_CATEGORY, dropdownCategory.getSelectedItem().toString());
+        todolist.put(TASK_DATE, date.getText().toString());
+        todolist.put(TASK_DESCRIPTION, notes.getText().toString());
+
+        db.collection("Todolist").document("MyTodo").set(todolist)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        Toast.makeText(AddNewTaskActivity.this, "Todo list saved", Toast.LENGTH_SHORT).show();
+                        finish();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AddNewTaskActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, e.toString());
+
+                    }
+                });
+
+
+
+
 
 
 

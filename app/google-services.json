@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "882975254796",
+    "firebase_url": "https://calendo-3b939.firebaseio.com",
+    "project_id": "calendo-3b939",
+    "storage_bucket": "calendo-3b939.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882975254796:android:971f208e194a5c073d8129",
+        "android_client_info": {
+          "package_name": "com.example.calendo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "882975254796-jsdcapeam6cl1nmokj5eioorn1s6ep0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.calendo",
+            "certificate_hash": "f90c670fcf9b179102d06ca8832217fe44d809a5"
+          }
+        },
+        {
+          "client_id": "882975254796-softp0h3bfm6l2ifikl09c9q3208l7b2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVccEIhQW9zWFCdDSu0leEks8xkYHlbOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "882975254796-softp0h3bfm6l2ifikl09c9q3208l7b2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
