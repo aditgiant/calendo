@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,9 +23,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.calendo.AddNewTaskActivity;
 import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
@@ -42,10 +53,19 @@ public class TodolistFragment extends Fragment {
     private ArrayList<Task> todolist;
     private ArrayList<String> categories;
 
+    public static final String TASK_TITLE="title";
+    public static final String TASK_CATEGORY="category";
+    public static final String TASK_DATE="duedate";
+    public static final String TASK_DESCRIPTION="description";
+    private static final String TAG = "TodolistFragment";
+
 
     //Temp attribute for this long string
     private static final String temp="ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
     public static final int TEXT_REQUEST = 1;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DocumentReference noteRef = db.collection("Todolist").document("MyTodo");
+    private ListenerRegistration todolistenerRegistration;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -61,8 +81,6 @@ public class TodolistFragment extends Fragment {
         //Update the list
         todolist = new ArrayList<>();
         updateTodolist();
-
-
 
 
         //Fill the categories list with fake categories
@@ -86,6 +104,37 @@ public class TodolistFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        todolistenerRegistration =noteRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(e!= null){
+                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                    return;
+                }else{
+                    if(documentSnapshot.exists()){
+                        String title = documentSnapshot.getString(TASK_TITLE);
+                        String category = documentSnapshot.getString(TASK_CATEGORY);
+                        String duedate = documentSnapshot.getString(TASK_DATE);
+                        String notes = documentSnapshot.getString(TASK_DESCRIPTION);
+
+                        emptyTodo.setText(title);
+
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        todolistenerRegistration.remove();
+    }
+
     public void putArguments(Bundle bundleforFragment) {
         todolist.add(new Task("#",
                     bundleforFragment.getString(TASK_TITLE),
@@ -100,16 +149,41 @@ public class TodolistFragment extends Fragment {
 
     public void updateTodolist(){
 
-        //The list of task should be an Array-list, of course the different lists will be retrieved from the DB
-        //I am extracting the lists
         ArrayList<String> t = new ArrayList<>();
         ArrayList<String> d = new ArrayList<>();
         ArrayList<String> dd = new ArrayList<>();
+
+        //The list of task should be an Array-list, of course the different lists will be retrieved from the DB
+        //I am extracting the lists
+
         for (int i=0; i<todolist.size(); i++){
             t.add(todolist.get(i).getTitle());
             d.add(todolist.get(i).getDescription());
             dd.add(todolist.get(i).getDuedate());
         }
+
+        noteRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        if(documentSnapshot.exists()){
+                            String title = documentSnapshot.getString(TASK_TITLE);
+                            String category = documentSnapshot.getString(TASK_CATEGORY);
+                            String duedate = documentSnapshot.getString(TASK_DATE);
+                            String notes = documentSnapshot.getString(TASK_DESCRIPTION);
+
+                           emptyTodo.setText(title);
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
 
         if(todolist.size()>0){
             emptyTodo.setVisibility(View.GONE);
