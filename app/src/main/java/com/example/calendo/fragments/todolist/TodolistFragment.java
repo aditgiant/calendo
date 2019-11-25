@@ -1,52 +1,36 @@
 package com.example.calendo.fragments.todolist;
 
-import android.content.Context;
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.calendo.AddNewTaskActivity;
 import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.calendo.adapters.MyAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
+
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
-import static android.app.Activity.RESULT_OK;
-import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
-import static com.example.calendo.AddNewTaskActivity.TASK_DESCRIPTION;
-import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
 
 public class TodolistFragment extends Fragment {
-    private TextView myTitle, myDescription, myDue;
+
     private CheckBox checkBox;
     private ListView listView;
     private RecyclerView recyclerView;
@@ -81,11 +65,9 @@ public class TodolistFragment extends Fragment {
         emptyTodo= view.findViewById(R.id.emptyTodo);
 
 
-
         //Update the list
         todolist = new ArrayList<>();
         updateTodolist();
-
 
         //Fill the categories list with fake categories
         categories = new ArrayList<>();
@@ -132,7 +114,6 @@ public class TodolistFragment extends Fragment {
                     String duedate = todolist.getDuedate();
                     String category = todolist.getCategory();
 
-
                     t.add(title);
                     d.add(description);
                     dd.add(duedate);
@@ -146,7 +127,6 @@ public class TodolistFragment extends Fragment {
                 listView.setAdapter(adapter);
 
             }
-
 
 
     });
@@ -216,41 +196,5 @@ public class TodolistFragment extends Fragment {
     }
 
 
-    //Private class used in the on create method
-    private class MyAdapter extends ArrayAdapter<String> {
-        Context context;
-        String[] rTitle;
-        String[] rDescription;
-        String[] rDue;
 
-
-        MyAdapter(Context c, String[] title, String[] description, String[] due) {
-            super (c, R.layout.row, R.id.titleTodo, title);
-
-            this.context = c;
-            this.rTitle = title;
-            this.rDescription = description;
-            this.rDue = due;
-
-
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
-
-            myTitle = row.findViewById(R.id.titleTodo);
-            myDue = row.findViewById(R.id.dueTodo);
-            myDescription = row.findViewById(R.id.descriptionTodo);
-
-            myTitle.setText(rTitle[position]);
-            myDue.setText(rDue[position]);
-            myDescription.setText(rDescription[position]);
-
-
-            return row;
-        }
-    }
 }
