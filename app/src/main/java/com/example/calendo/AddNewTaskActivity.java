@@ -19,6 +19,7 @@ import com.example.calendo.fragments.todolist.Task;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
     //Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference todoRef = db.collection("Todolist");
 
 
     @Override
@@ -89,51 +91,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
     }
 
     public void saveTask(View view){
-        //Create intent  for the reply
-//        Intent replyIntent = new Intent();
-//
-//        //handle empty input
-//        if(!title.getText().toString().equals("") && !date.getText().toString().equals("") && !notes.getText().toString().equals("")){
-//            //Get text
-//            replyIntent.putExtra(TASK_TITLE, title.getText().toString());
-//            replyIntent.putExtra(TASK_DATE, date.getText().toString());
-//            replyIntent.putExtra(TASK_DESCRIPTION, notes.getText().toString());
-//            setResult(RESULT_OK, replyIntent);
-//            //Add other parameters then
-//            //Close this activity and back
-//            finish();
-//        }
 
-
-        Map<String, Object> todolist = new HashMap<>();
-        todolist.put(TASK_TITLE, title.getText().toString());
-        todolist.put(TASK_CATEGORY, dropdownCategory.getSelectedItem().toString());
-        todolist.put(TASK_DATE, date.getText().toString());
-        todolist.put(TASK_DESCRIPTION, notes.getText().toString());
-
-        db.collection("Todolist").document("MyTodo").set(todolist)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-
-                        Toast.makeText(AddNewTaskActivity.this, "Todo list saved", Toast.LENGTH_SHORT).show();
-                        finish();
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddNewTaskActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, e.toString());
-
-                    }
-                });
-
-
-
-
-
+        Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), date.getText().toString() );
+        todoRef.add(todolist);
+        finish();
 
 
     }

@@ -25,12 +25,15 @@ import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,9 +66,10 @@ public class TodolistFragment extends Fragment {
     //Temp attribute for this long string
     private static final String temp="ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
     public static final int TEXT_REQUEST = 1;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private DocumentReference noteRef = db.collection("Todolist").document("MyTodo");
-    private ListenerRegistration todolistenerRegistration;
+    private CollectionReference todoRef = db.collection("Todolist");
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -107,32 +111,51 @@ public class TodolistFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        todolistenerRegistration =noteRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+
+        todoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if(e!= null){
                     Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, e.toString());
-                    return;
-                }else{
-                    if(documentSnapshot.exists()){
-                        String title = documentSnapshot.getString(TASK_TITLE);
-                        String category = documentSnapshot.getString(TASK_CATEGORY);
-                        String duedate = documentSnapshot.getString(TASK_DATE);
-                        String notes = documentSnapshot.getString(TASK_DESCRIPTION);
-
-                        emptyTodo.setText(title);
-
-                    }
                 }
+
+                ArrayList<String> t = new ArrayList<>();
+                ArrayList<String> d = new ArrayList<>();
+                ArrayList<String> dd = new ArrayList<>();
+
+                for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                    Task todolist = documentSnapshot.toObject(Task.class);
+                    todolist.setId(documentSnapshot.getId());
+                    String id = todolist.getId();
+                    String title = todolist.getTitle();
+                    String description = todolist.getDescription();
+                    String duedate = todolist.getDuedate();
+                    String category = todolist.getCategory();
+
+
+                    t.add(title);
+                    d.add(description);
+                    dd.add(duedate);
+
+                }
+
+                listView.setVisibility(View.VISIBLE);
+                emptyTodo.setVisibility(View.GONE);
+
+                MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
+                listView.setAdapter(adapter);
+
             }
-        });
+
+
+
+    });
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        todolistenerRegistration.remove();
+
     }
 
     public void putArguments(Bundle bundleforFragment) {
@@ -149,55 +172,47 @@ public class TodolistFragment extends Fragment {
 
     public void updateTodolist(){
 
-        ArrayList<String> t = new ArrayList<>();
-        ArrayList<String> d = new ArrayList<>();
-        ArrayList<String> dd = new ArrayList<>();
+      todoRef.get()
+              .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
-        //The list of task should be an Array-list, of course the different lists will be retrieved from the DB
-        //I am extracting the lists
+                  @Override
+                  public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-        for (int i=0; i<todolist.size(); i++){
-            t.add(todolist.get(i).getTitle());
-            d.add(todolist.get(i).getDescription());
-            dd.add(todolist.get(i).getDuedate());
-        }
+                      ArrayList<String> t = new ArrayList<>();
+                      ArrayList<String> d = new ArrayList<>();
+                      ArrayList<String> dd = new ArrayList<>();
 
-        noteRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                        if(documentSnapshot.exists()){
-                            String title = documentSnapshot.getString(TASK_TITLE);
-                            String category = documentSnapshot.getString(TASK_CATEGORY);
-                            String duedate = documentSnapshot.getString(TASK_DATE);
-                            String notes = documentSnapshot.getString(TASK_DESCRIPTION);
-
-                           emptyTodo.setText(title);
+                        if(queryDocumentSnapshots.size()==0){
+                            listView.setVisibility(View.GONE);
+                            emptyTodo.setVisibility(View.VISIBLE);
 
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                        for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                            Task todolist = documentSnapshot.toObject(Task.class);
+                            todolist.setId(documentSnapshot.getId());
+                            String id = todolist.getId();
+                            String title = todolist.getTitle();
+                            String description = todolist.getDescription();
+                            String duedate = todolist.getDuedate();
+                            String category = todolist.getCategory();
 
-                    }
-                });
+                            t.add(title);
+                            d.add(description);
+                            dd.add(duedate);
 
-        if(todolist.size()>0){
-            emptyTodo.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
-        }
-        else{
-            emptyTodo.setVisibility(View.VISIBLE);
-            listView.setVisibility(View.GONE);
-        }
+                        }
+
+                      listView.setVisibility(View.VISIBLE);
+                      emptyTodo.setVisibility(View.GONE);
 
 
-        //Task list
-        MyAdapter adapter = new MyAdapter(this.getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
-        listView.setAdapter(adapter);
+                      MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
+                      listView.setAdapter(adapter);
+
+                  }
+              });
+
+
     }
 
 
