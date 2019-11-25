@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.calendo.AddNewTaskActivity;
 import com.example.calendo.MainActivity;
+
 import com.example.calendo.R;
 import com.example.calendo.fragments.StatisticsFragment;
 
@@ -29,10 +30,17 @@ import java.util.Calendar;
  */
 public class TabMonthFragment extends Fragment {
 
+
+    public TabMonthFragment() {
+        // Required empty public constructor
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_tab_month, container, false);
         CalendarView c = view.findViewById(R.id.simpleCalendarView);
         c.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -51,6 +59,7 @@ public class TabMonthFragment extends Fragment {
                         .beginTransaction()
                         .replace(R.id.pager, tabWeekFragment, "TabWeekFragment")
                         .addToBackStack("TabWeekFragment").commit();
+
 
 //                Intent intent = new Intent(getActivity().getBaseContext(), MainActivity.class);
 //                intent.putExtra("yearselect", yearselect);

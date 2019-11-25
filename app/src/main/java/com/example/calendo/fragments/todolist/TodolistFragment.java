@@ -1,38 +1,36 @@
 package com.example.calendo.fragments.todolist;
 
-import android.content.Context;
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.calendo.AddNewTaskActivity;
 import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
+import com.example.calendo.adapters.MyAdapter;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static android.app.Activity.RESULT_OK;
-import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
-import static com.example.calendo.AddNewTaskActivity.TASK_DESCRIPTION;
-import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
 
 public class TodolistFragment extends Fragment {
-    private TextView myTitle, myDescription, myDue;
+
     private CheckBox checkBox;
     private ListView listView;
     private RecyclerView recyclerView;
@@ -42,10 +40,20 @@ public class TodolistFragment extends Fragment {
     private ArrayList<Task> todolist;
     private ArrayList<String> categories;
 
+    public static final String TASK_TITLE="title";
+    public static final String TASK_CATEGORY="category";
+    public static final String TASK_DATE="duedate";
+    public static final String TASK_DESCRIPTION="description";
+    private static final String TAG = "TodolistFragment";
+
 
     //Temp attribute for this long string
     private static final String temp="ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
     public static final int TEXT_REQUEST = 1;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference todoRef = db.collection("Todolist");
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -57,13 +65,9 @@ public class TodolistFragment extends Fragment {
         emptyTodo= view.findViewById(R.id.emptyTodo);
 
 
-
         //Update the list
         todolist = new ArrayList<>();
         updateTodolist();
-
-
-
 
         //Fill the categories list with fake categories
         categories = new ArrayList<>();
@@ -86,6 +90,54 @@ public class TodolistFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        todoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(e!= null){
+                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
+                }
+
+                ArrayList<String> t = new ArrayList<>();
+                ArrayList<String> d = new ArrayList<>();
+                ArrayList<String> dd = new ArrayList<>();
+
+                for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                    Task todolist = documentSnapshot.toObject(Task.class);
+                    todolist.setId(documentSnapshot.getId());
+                    String id = todolist.getId();
+                    String title = todolist.getTitle();
+                    String description = todolist.getDescription();
+                    String duedate = todolist.getDuedate();
+                    String category = todolist.getCategory();
+
+                    t.add(title);
+                    d.add(description);
+                    dd.add(duedate);
+
+                }
+
+                listView.setVisibility(View.VISIBLE);
+                emptyTodo.setVisibility(View.GONE);
+
+                MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
+                listView.setAdapter(adapter);
+
+            }
+
+
+    });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+    }
+
     public void putArguments(Bundle bundleforFragment) {
         todolist.add(new Task("#",
                     bundleforFragment.getString(TASK_TITLE),
@@ -100,68 +152,49 @@ public class TodolistFragment extends Fragment {
 
     public void updateTodolist(){
 
-        //The list of task should be an Array-list, of course the different lists will be retrieved from the DB
-        //I am extracting the lists
-        ArrayList<String> t = new ArrayList<>();
-        ArrayList<String> d = new ArrayList<>();
-        ArrayList<String> dd = new ArrayList<>();
-        for (int i=0; i<todolist.size(); i++){
-            t.add(todolist.get(i).getTitle());
-            d.add(todolist.get(i).getDescription());
-            dd.add(todolist.get(i).getDuedate());
-        }
+      todoRef.get()
+              .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
-        if(todolist.size()>0){
-            emptyTodo.setVisibility(View.GONE);
-            listView.setVisibility(View.VISIBLE);
-        }
-        else{
-            emptyTodo.setVisibility(View.VISIBLE);
-            listView.setVisibility(View.GONE);
-        }
+                  @Override
+                  public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                      ArrayList<String> t = new ArrayList<>();
+                      ArrayList<String> d = new ArrayList<>();
+                      ArrayList<String> dd = new ArrayList<>();
+
+                        if(queryDocumentSnapshots.size()==0){
+                            listView.setVisibility(View.GONE);
+                            emptyTodo.setVisibility(View.VISIBLE);
+
+                        }
+                        for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                            Task todolist = documentSnapshot.toObject(Task.class);
+                            todolist.setId(documentSnapshot.getId());
+                            String id = todolist.getId();
+                            String title = todolist.getTitle();
+                            String description = todolist.getDescription();
+                            String duedate = todolist.getDuedate();
+                            String category = todolist.getCategory();
+
+                            t.add(title);
+                            d.add(description);
+                            dd.add(duedate);
+
+                        }
+
+                      listView.setVisibility(View.VISIBLE);
+                      emptyTodo.setVisibility(View.GONE);
 
 
-        //Task list
-        MyAdapter adapter = new MyAdapter(this.getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
-        listView.setAdapter(adapter);
+                      MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
+                      listView.setAdapter(adapter);
+
+                  }
+              });
+
+
     }
 
 
-    //Private class used in the on create method
-    private class MyAdapter extends ArrayAdapter<String> {
-        Context context;
-        String[] rTitle;
-        String[] rDescription;
-        String[] rDue;
 
-
-        MyAdapter(Context c, String[] title, String[] description, String[] due) {
-            super (c, R.layout.row, R.id.titleTodo, title);
-
-            this.context = c;
-            this.rTitle = title;
-            this.rDescription = description;
-            this.rDue = due;
-
-
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.row, parent, false);
-
-            myTitle = row.findViewById(R.id.titleTodo);
-            myDue = row.findViewById(R.id.dueTodo);
-            myDescription = row.findViewById(R.id.descriptionTodo);
-
-            myTitle.setText(rTitle[position]);
-            myDue.setText(rDue[position]);
-            myDescription.setText(rDescription[position]);
-
-
-            return row;
-        }
-    }
 }
