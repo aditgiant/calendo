@@ -87,7 +87,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 "/" + day_string + "/" + year_string);
         TextView tasktimelabel = findViewById(R.id.TaskTimeLabel);
         tasktimelabel.setText(dateMessage);
-        Toast.makeText(this, "Date selected", Toast.LENGTH_SHORT).show();
+
     }
 
     public void saveTask(View view){
