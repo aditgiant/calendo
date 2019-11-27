@@ -13,11 +13,16 @@ import com.example.calendo.R;
 public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
     private String[] list;
     private Context context;
-    public HorizontalAdapter(Context c ,String[] list ) {
+
+
+
+    public HorizontalAdapter(Context c, String[] list) {
         this.context = c;
         this.list = list;
 
+
     }
+
 
     @NonNull
     @Override
@@ -25,6 +30,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.category, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
+
+
         return holder;
     }
 
@@ -32,10 +39,15 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.taskCategory.setText(list[position]);
 
+
     }
 
     @Override
     public int getItemCount() {
         return list.length;
     }
+
+
+
+
 }

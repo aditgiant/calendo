@@ -166,9 +166,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //Attach to the todolist
 
                     bundleforFragment = new Bundle();
-                    bundleforFragment.putString(TASK_TITLE, data.getStringExtra(TASK_TITLE));
-                    bundleforFragment.putString(TASK_DATE, data.getStringExtra(TASK_DATE));
-                    bundleforFragment.putString(TASK_DESCRIPTION, data.getStringExtra(TASK_DESCRIPTION));
+//                    bundleforFragment.putString(TASK_TITLE, data.getStringExtra(TASK_TITLE));
+//                    bundleforFragment.putString(TASK_DATE, data.getStringExtra(TASK_DATE));
+//                    bundleforFragment.putString(TASK_DESCRIPTION, data.getStringExtra(TASK_DESCRIPTION));
 
                     todolistFragment.putArguments(bundleforFragment);
 

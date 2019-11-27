@@ -11,7 +11,6 @@
        android:layout_margin="5dp"
        android:text="category"
        android:textColor="@color/colorAccent"
-       android:background="@drawable/drawable_btn"
        android:id="@+id/categoryTask"/>
 
 </LinearLayout>

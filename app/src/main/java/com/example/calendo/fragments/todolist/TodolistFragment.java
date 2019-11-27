@@ -1,15 +1,21 @@
 package com.example.calendo.fragments.todolist;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +31,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+
+import static com.example.calendo.App.Channel1;
 
 
 public class TodolistFragment extends Fragment {
@@ -35,6 +46,7 @@ public class TodolistFragment extends Fragment {
     private ListView listView;
     private RecyclerView recyclerView;
     private TextView emptyTodo;
+    private NotificationManagerCompat notificationManager;
 
     //Data
     private ArrayList<Task> todolist;
@@ -55,6 +67,8 @@ public class TodolistFragment extends Fragment {
     private CollectionReference todoRef = db.collection("Todolist");
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.to_do_list_fragment, container, false);
@@ -63,6 +77,7 @@ public class TodolistFragment extends Fragment {
         recyclerView = view.findViewById(R.id.categoryList);
         checkBox = view.findViewById(R.id.checkboxTask);
         emptyTodo= view.findViewById(R.id.emptyTodo);
+
 
 
         //Update the list
@@ -85,10 +100,9 @@ public class TodolistFragment extends Fragment {
 
         recyclerView.setLayoutManager(MyLayoutManager);
 
-
-
         return view;
     }
+
 
     @Override
     public void onStart() {
@@ -101,34 +115,9 @@ public class TodolistFragment extends Fragment {
                     Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
                 }
 
-                ArrayList<String> t = new ArrayList<>();
-                ArrayList<String> d = new ArrayList<>();
-                ArrayList<String> dd = new ArrayList<>();
-
-                for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                    Task todolist = documentSnapshot.toObject(Task.class);
-                    todolist.setId(documentSnapshot.getId());
-                    String id = todolist.getId();
-                    String title = todolist.getTitle();
-                    String description = todolist.getDescription();
-                    String duedate = todolist.getDuedate();
-                    String category = todolist.getCategory();
-
-                    t.add(title);
-                    d.add(description);
-                    dd.add(duedate);
-
-                }
-
-                listView.setVisibility(View.VISIBLE);
-                emptyTodo.setVisibility(View.GONE);
-
-                MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
-                listView.setAdapter(adapter);
+                renderList(queryDocumentSnapshots);
 
             }
-
-
     });
     }
 
@@ -139,13 +128,6 @@ public class TodolistFragment extends Fragment {
     }
 
     public void putArguments(Bundle bundleforFragment) {
-        todolist.add(new Task("#",
-                    bundleforFragment.getString(TASK_TITLE),
-                    "Todo",
-                    bundleforFragment.getString(TASK_DESCRIPTION),
-                    bundleforFragment.getString(TASK_DATE)));
-
-
         updateTodolist();
 
     }
@@ -158,39 +140,89 @@ public class TodolistFragment extends Fragment {
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                      ArrayList<String> t = new ArrayList<>();
-                      ArrayList<String> d = new ArrayList<>();
-                      ArrayList<String> dd = new ArrayList<>();
-
-                        if(queryDocumentSnapshots.size()==0){
-                            listView.setVisibility(View.GONE);
-                            emptyTodo.setVisibility(View.VISIBLE);
-
-                        }
-                        for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                            Task todolist = documentSnapshot.toObject(Task.class);
-                            todolist.setId(documentSnapshot.getId());
-                            String id = todolist.getId();
-                            String title = todolist.getTitle();
-                            String description = todolist.getDescription();
-                            String duedate = todolist.getDuedate();
-                            String category = todolist.getCategory();
-
-                            t.add(title);
-                            d.add(description);
-                            dd.add(duedate);
-
-                        }
-
-                      listView.setVisibility(View.VISIBLE);
-                      emptyTodo.setVisibility(View.GONE);
-
-
-                      MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
-                      listView.setAdapter(adapter);
+                      renderList(queryDocumentSnapshots);
 
                   }
               });
+
+
+    }
+
+    private void onSelectCheckBox(View view){
+        checkBox = view.findViewById(R.id.checkboxTask);
+        if(checkBox.isChecked()) {
+            checkBox.setChecked(false);
+            view.setBackgroundColor(Color.WHITE);
+        }
+        else{
+            checkBox.setChecked(true);
+            view.setBackgroundColor(Color.LTGRAY);
+
+        };
+    }
+
+    private void renderList(QuerySnapshot queryDocumentSnapshots){
+        ArrayList<String> t = new ArrayList<>();
+        ArrayList<String> d = new ArrayList<>();
+        ArrayList<String> dd = new ArrayList<>();
+
+        if(queryDocumentSnapshots.size()==0){
+            listView.setVisibility(View.GONE);
+            emptyTodo.setVisibility(View.VISIBLE);
+
+        }
+        for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+            Task todolist = documentSnapshot.toObject(Task.class);
+            todolist.setId(documentSnapshot.getId());
+            String id = todolist.getId();
+            String title = todolist.getTitle();
+            String description = todolist.getDescription();
+            String duedate = todolist.getDuedate();
+            String category = todolist.getCategory();
+
+            t.add(title);
+            d.add(description);
+            dd.add(duedate);
+
+            SimpleDateFormat formatter= new SimpleDateFormat("MM/dd/yyyy");
+            Date date = new Date(System.currentTimeMillis());
+            notificationManager = NotificationManagerCompat.from(this.getContext());
+            String newDate = formatter.format(date);
+            System.out.println(formatter.format(date));
+            if(newDate.equals(duedate)){
+               renderPushNotification(title);
+
+            }
+
+        }
+
+        listView.setVisibility(View.VISIBLE);
+        emptyTodo.setVisibility(View.GONE);
+
+
+        MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                onSelectCheckBox(view);
+
+            }
+        });
+    }
+
+    private void renderPushNotification(String title){
+        Notification notification = new NotificationCompat.Builder(this.getContext(),Channel1)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Please complete by today")
+                .setContentText(title)
+                .setAutoCancel(true)
+                .setColor(Color.RED)
+                .setOnlyAlertOnce(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build();
+
+        notificationManager.notify(1,notification);
 
 
     }
