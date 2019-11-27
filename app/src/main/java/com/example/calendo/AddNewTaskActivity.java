@@ -62,7 +62,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         //Fill dropdown
         // you need to have a list of data that you want the spinner to display
         categories =  new ArrayList<String>();
-        categories.add("To do");
+        categories.add("Todo");
         categories.add("Reminder");
         categories.add("Appointment");
         categories.add("Personal Goals");

@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import java.util.Date;
 import static com.example.calendo.App.Channel1;
 
 
-public class TodolistFragment extends Fragment {
+public class TodolistFragment extends Fragment   {
 
     private CheckBox checkBox;
     private ListView listView;
@@ -89,13 +90,19 @@ public class TodolistFragment extends Fragment {
         categories.addAll(Arrays.asList("All", "Todo", "Reminder", "Appointment", "Personal Goals"));
 
         //Categories list
-        HorizontalAdapter horizontalAdapter = new HorizontalAdapter(this.getContext(), categories.toArray(new String[0]));
-        recyclerView.setAdapter(horizontalAdapter);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(this.getContext());
         MyLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         if (categories.size() > 0 & recyclerView != null) {
-            recyclerView.setAdapter(new HorizontalAdapter(this.getContext(), categories.toArray(new String[0])));
+            recyclerView.setAdapter(new HorizontalAdapter(this.getContext(), categories.toArray(new String[0]),new HorizontalAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(RecyclerView.ViewHolder holder) {
+
+                    filterList(categories.get(holder.getAdapterPosition()));
+
+                   // Toast.makeText(getContext(), "Item position"+ categories.get(holder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                }
+            }));
         }
 
         recyclerView.setLayoutManager(MyLayoutManager);
@@ -136,10 +143,8 @@ public class TodolistFragment extends Fragment {
 
       todoRef.get()
               .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
                       renderList(queryDocumentSnapshots);
 
                   }
@@ -147,6 +152,7 @@ public class TodolistFragment extends Fragment {
 
 
     }
+
 
     private void onSelectCheckBox(View view){
         checkBox = view.findViewById(R.id.checkboxTask);
@@ -227,6 +233,24 @@ public class TodolistFragment extends Fragment {
 
     }
 
+    private void filterList (String item){
+        if(item.equals("All")){
+            updateTodolist();
+        }else {
+            todoRef.whereEqualTo("category", item)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                            renderList(queryDocumentSnapshots);
+
+                        }
+                    });
+
+        }
+
+    }
 
 }
