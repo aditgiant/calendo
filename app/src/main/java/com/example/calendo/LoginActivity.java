@@ -39,7 +39,14 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view) {
 
-        validateLogin(email.getText().toString(), pw.getText().toString());
+        //README: Enable the line below and comment the Intent to connect to the DB
+
+        //validateLogin(email.getText().toString(), pw.getText().toString());
+
+
+        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
 
     }
 
