@@ -8,11 +8,14 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.calendo.fragments.AccountFragment;
 import com.example.calendo.fragments.StatisticsFragment;
@@ -45,6 +48,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Activate progress spinner
+        final ProgressDialog nDialog;
+        nDialog = new ProgressDialog(this);
+        nDialog.setMessage("Loading..");
+        nDialog.setTitle("Get Data");
+        nDialog.setIndeterminate(false);
+        nDialog.setCancelable(true);
+        nDialog.show();
+
 
         //Link UI elements
         fab = findViewById(R.id.fab);
@@ -72,6 +84,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     todolistFragment).commit();
         }
+
+        //Activity loaded
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 0,75s = 750ms
+
+                nDialog.dismiss();
+
+            }
+        }, 750);
+
+
+
 
     }
 
@@ -182,6 +209,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else {
             System.out.println("Not this intent");
         }
+    }
+
+    public void showLoadingSpinner(ProgressDialog nDialog){
+
+
+    }
+
+    public void endLoadingSpinner(ProgressDialog spinner){
+        spinner.dismiss();
     }
 }
 

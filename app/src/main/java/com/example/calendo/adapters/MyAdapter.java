@@ -68,7 +68,6 @@ public class MyAdapter extends ArrayAdapter<String> {
             @Override
             public void onClick(View arg0) {
 
-                myCheckbox.setChecked(true);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -86,6 +85,7 @@ public class MyAdapter extends ArrayAdapter<String> {
 
             }
         });
+
 
 
         return convertView;

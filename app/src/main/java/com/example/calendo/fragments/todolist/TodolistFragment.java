@@ -3,6 +3,7 @@ package com.example.calendo.fragments.todolist;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,7 +45,6 @@ import static com.example.calendo.App.Channel1;
 
 public class TodolistFragment extends Fragment   {
 
-    private CheckBox checkBox;
     private ListView listView;
     private RecyclerView recyclerView;
     private TextView emptyTodo;
@@ -69,7 +69,6 @@ public class TodolistFragment extends Fragment   {
 
         listView = view.findViewById(R.id.listView);
         recyclerView = view.findViewById(R.id.categoryList);
-        checkBox = view.findViewById(R.id.checkboxTask);
         emptyTodo= view.findViewById(R.id.emptyTodo);
 
 
@@ -107,6 +106,7 @@ public class TodolistFragment extends Fragment   {
     @Override
     public void onStart() {
         super.onStart();
+
 
         todoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -171,6 +171,8 @@ public class TodolistFragment extends Fragment   {
             dd.add(duedate);
             IDs.add(id);
 
+
+            /*------- DATE TO BE FIXED ------
             SimpleDateFormat formatter= new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date(System.currentTimeMillis());
             notificationManager = NotificationManagerCompat.from(this.getContext());
@@ -181,6 +183,8 @@ public class TodolistFragment extends Fragment   {
 
             }
 
+             */
+
         }
 
         listView.setVisibility(View.VISIBLE);
@@ -190,26 +194,6 @@ public class TodolistFragment extends Fragment   {
         MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]), IDs.toArray(new String[0]));
         listView.setAdapter(adapter);
 
-        /*
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                //UI effects
-                onSelectCheckBox(view);
-
-                //Data managmenet
-
-                //Here I need the ID of the selected item
-                todoRef.document(IDs.get(position)).delete();
-                updateTodolist();
-
-
-
-            }
-        });
-
-         */
     }
 
     private void renderPushNotification(String title){
