@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Bundle bundleforFragment;
     private TodolistFragment todolistFragment;
 
+    private ProgressDialog nDialog;
 
 
     @Override
@@ -48,15 +49,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Activate progress spinner
-        final ProgressDialog nDialog;
-        nDialog = new ProgressDialog(this);
-        nDialog.setMessage("Loading..");
-        nDialog.setTitle("Get Data");
-        nDialog.setIndeterminate(false);
-        nDialog.setCancelable(true);
-        nDialog.show();
 
+        //Show loading Spinenr
+        nDialog = new ProgressDialog(this);
+        showLoadingSpinner();
 
         //Link UI elements
         fab = findViewById(R.id.fab);
@@ -84,21 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     todolistFragment).commit();
         }
-
-        //Activity loaded
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Do something after 0,75s = 750ms
-
-                nDialog.dismiss();
-
-            }
-        }, 750);
-
-
-
 
     }
 
@@ -211,13 +192,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void showLoadingSpinner(ProgressDialog nDialog){
 
+    //Loading Spinner Methods
 
+    public void showLoadingSpinner(){
+
+        //Activate progress spinner
+        nDialog.setMessage("Loading..");
+        nDialog.setTitle("Get Data");
+        nDialog.setIndeterminate(false);
+        nDialog.setCancelable(true);
+        nDialog.show();
     }
 
-    public void endLoadingSpinner(ProgressDialog spinner){
-        spinner.dismiss();
+    public void endLoadingSpinner(){
+        nDialog.dismiss();
     }
 }
 
