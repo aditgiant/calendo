@@ -37,6 +37,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.calendo.App.Channel1;
 
@@ -53,15 +54,7 @@ public class TodolistFragment extends Fragment   {
     private ArrayList<Task> todolist;
     private ArrayList<String> categories;
 
-    public static final String TASK_TITLE="title";
-    public static final String TASK_CATEGORY="category";
-    public static final String TASK_DATE="duedate";
-    public static final String TASK_DESCRIPTION="description";
-    private static final String TAG = "TodolistFragment";
 
-
-    //Temp attribute for this long string
-    private static final String temp="ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
     public static final int TEXT_REQUEST = 1;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -153,24 +146,11 @@ public class TodolistFragment extends Fragment   {
 
     }
 
-
-    private void onSelectCheckBox(View view){
-        checkBox = view.findViewById(R.id.checkboxTask);
-        if(checkBox.isChecked()) {
-            checkBox.setChecked(false);
-            view.setBackgroundColor(Color.WHITE);
-        }
-        else{
-            checkBox.setChecked(true);
-            view.setBackgroundColor(Color.LTGRAY);
-
-        };
-    }
-
     private void renderList(QuerySnapshot queryDocumentSnapshots){
-        ArrayList<String> t = new ArrayList<>();
-        ArrayList<String> d = new ArrayList<>();
-        ArrayList<String> dd = new ArrayList<>();
+        final ArrayList<String> t = new ArrayList<>();
+        final ArrayList<String> d = new ArrayList<>();
+        final ArrayList<String> dd = new ArrayList<>();
+        final ArrayList<String> IDs = new ArrayList<>();
 
         if(queryDocumentSnapshots.size()==0){
             listView.setVisibility(View.GONE);
@@ -189,6 +169,7 @@ public class TodolistFragment extends Fragment   {
             t.add(title);
             d.add(description);
             dd.add(duedate);
+            IDs.add(id);
 
             SimpleDateFormat formatter= new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date(System.currentTimeMillis());
@@ -206,15 +187,29 @@ public class TodolistFragment extends Fragment   {
         emptyTodo.setVisibility(View.GONE);
 
 
-        MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]));
+        MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]), IDs.toArray(new String[0]));
         listView.setAdapter(adapter);
+
+        /*
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                //UI effects
                 onSelectCheckBox(view);
+
+                //Data managmenet
+
+                //Here I need the ID of the selected item
+                todoRef.document(IDs.get(position)).delete();
+                updateTodolist();
+
+
 
             }
         });
+
+         */
     }
 
     private void renderPushNotification(String title){
