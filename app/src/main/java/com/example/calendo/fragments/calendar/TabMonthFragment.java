@@ -20,6 +20,7 @@ import com.example.calendo.AddNewTaskActivity;
 import com.example.calendo.MainActivity;
 
 import com.example.calendo.R;
+import com.example.calendo.RetrievedTask;
 import com.example.calendo.fragments.StatisticsFragment;
 
 import java.util.Calendar;
@@ -28,7 +29,7 @@ import java.util.Calendar;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TabMonthFragment extends Fragment {
+public class TabMonthFragment extends Fragment{
 
 
     public TabMonthFragment() {
