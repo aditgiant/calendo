@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.calendo.R;
+import com.example.calendo.utils.QuotesService;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,6 +27,7 @@ public class MyAdapter extends ArrayAdapter<String> {
     String[] IDs;
     private TextView myTitle, myDescription, myDue;
     private CheckBox myCheckbox;
+    private QuotesService quotesService;
 
     //DB Connection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -41,6 +43,8 @@ public class MyAdapter extends ArrayAdapter<String> {
         this.rDue = due;
         this.IDs= IDs;
 
+        //Link the quote service, will be used on the checked handler
+        this.quotesService = new QuotesService();
 
     }
 
@@ -68,6 +72,8 @@ public class MyAdapter extends ArrayAdapter<String> {
             @Override
             public void onClick(View arg0) {
 
+                //Show the inspirational quotes once the task has been completed
+                quotesService.retrieveQuote(getContext());
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
