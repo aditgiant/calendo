@@ -31,8 +31,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.category, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.round_category, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
 
         return holder;
@@ -41,7 +40,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         holder.taskCategory.setText(list[position]);
-        holder.taskCategory.setOnClickListener(new View.OnClickListener() {
+        holder.buttonCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(view.getContext(),  "Position no: "+ position, Toast.LENGTH_LONG).show();
