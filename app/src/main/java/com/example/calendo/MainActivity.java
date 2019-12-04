@@ -16,12 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.calendo.fragments.AccountFragment;
 import com.example.calendo.fragments.StatisticsFragment;
 import com.example.calendo.fragments.todolist.Task;
 import com.example.calendo.fragments.todolist.TodolistFragment;
 import com.example.calendo.fragments.calendar.CalendarFragment;
+import com.example.calendo.utils.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FloatingActionButton fab;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private TextView drawerName;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
 
@@ -43,12 +46,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ProgressDialog nDialog;
 
+    //Reference to the logged user
+    private User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         //Show loading Spinenr
         nDialog = new ProgressDialog(this);
@@ -56,7 +61,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Link UI elements
         fab = findViewById(R.id.fab);
+
+        //Set the name in the Drawer
         navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        drawerName = (TextView) headerView.findViewById(R.id.drawerName);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,6 +79,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Make the toggle rotating
         actionBarDrawerToggle.syncState();
+
+
+
+        //Compose the user object and set the name in the drawer
+        Intent intent= getIntent();
+        user = new User(intent.getStringExtra("userID"), drawerName);
+
 
         //Load the correct home pages listView or Calendar View
         if(calendarViewOn){
@@ -192,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
     //Loading Spinner Methods
 
     public void showLoadingSpinner(){
@@ -208,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void endLoadingSpinner(){
         nDialog.dismiss();
     }
+
 }
 
 
