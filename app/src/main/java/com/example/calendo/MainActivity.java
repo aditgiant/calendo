@@ -9,7 +9,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -31,6 +33,7 @@ import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
 import static com.example.calendo.AddNewTaskActivity.TASK_DESCRIPTION;
 import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
 import static com.example.calendo.fragments.todolist.TodolistFragment.TEXT_REQUEST;
+import static com.example.calendo.utils.User.MY_PREFS_NAME;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Compose the user object and set the name in the drawer
         Intent intent= getIntent();
-        user = new User(intent.getStringExtra("userID"), drawerName);
+        user = new User(intent.getStringExtra("userID"), drawerName, this);
 
 
         //Load the correct home pages listView or Calendar View
@@ -153,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                 break;
+
+            case R.id.nav_logout:
+
+                logOut();
+
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -207,6 +216,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else {
             System.out.println("Not this intent");
         }
+    }
+
+    public void logOut(){
+        SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove("userID");
+        editor.apply();
+
+        //Back to the login
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+        finish();
+
     }
 
     //Loading Spinner Methods

@@ -1,5 +1,8 @@
 package com.example.calendo.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -16,6 +19,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -30,11 +34,21 @@ public class User {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
 
-    public User(String userID, final TextView drawerName) {
+
+    public User(String userID, final TextView drawerName, Activity activity) {
         this.userID = userID;
 
+        //Store user id in the stared preferences to avoid login each time
+        SharedPreferences sharedPref = activity.getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("userID", userID);
+        editor.apply();
 
+
+
+        //Retrieve user information
         CollectionReference usersRef = db.collection("Users");
 
         usersRef.whereEqualTo(FieldPath.documentId(),userID)
