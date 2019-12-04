@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,15 +17,21 @@ import android.widget.Toast;
 
 import com.example.calendo.fragments.DatePickerFragment;
 import com.example.calendo.fragments.todolist.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
+import static com.example.calendo.utils.User.MY_PREFS_NAME;
 
 public class AddNewTaskActivity extends AppCompatActivity {
     private FloatingActionButton fab_save;
@@ -44,7 +51,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
     //Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference todoRef = db.collection("Todolist");
+    private CollectionReference usersRef = db.collection("Users");
 
 
     @Override
@@ -61,22 +68,53 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         //Fill dropdown
         // you need to have a list of data that you want the spinner to display
-        categories =  new ArrayList<String>();
-        categories.add("Todo");
-        categories.add("Reminder");
-        categories.add("Appointment");
-        categories.add("Personal Goals");
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdownCategory.setAdapter(adapter);
+        getCategories();
 
     }
 
     public void showDatePicker(View view) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(),"datePicker");
+    }
+
+    public void getCategories(){
+
+        //Retrieve the userID
+        SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        final String userID = sharedPref.getString("userID", "NOUSERFOUND");
+
+        categories = new ArrayList<>();
+
+        //Retrieve user categories
+        CollectionReference usersRef = db.collection("Users").document(userID).collection("categories");
+
+        usersRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                categories.add(document.getString("categoryName"));
+
+                            }
+
+                            renderCategories();
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+    }
+
+    public void renderCategories(){
+        //Set the UI
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropdownCategory.setAdapter(adapter);
     }
 
     public void processDatePickerResult(int year, int month, int day) {
@@ -107,9 +145,15 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 datetoShow = date.getText().toString();
             }
 
+            //Retrieve the userID
+            SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+            String userID = sharedPref.getString("userID", "NOUSERFOUND");
+
+
+
             //Now save the task
-            Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), datetoShow );
-            todoRef.add(todolist);
+            Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), datetoShow , "notCompleted");
+            usersRef.document(userID).collection("list").add(todolist);
             finish();
 
         }

@@ -183,41 +183,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-
-        //If it's my response
-        if (requestCode == TEXT_REQUEST) {
-            //If this response is ok
-            if (resultCode == RESULT_OK) {
-
-                //Here I attach the new item to the list
-
-                if(!calendarViewOn){
-                    //Attach to the todolist
-
-                    bundleforFragment = new Bundle();
-//                    bundleforFragment.putString(TASK_TITLE, data.getStringExtra(TASK_TITLE));
-//                    bundleforFragment.putString(TASK_DATE, data.getStringExtra(TASK_DATE));
-//                    bundleforFragment.putString(TASK_DESCRIPTION, data.getStringExtra(TASK_DESCRIPTION));
-
-                    todolistFragment.putArguments(bundleforFragment);
-
-
-
-                }else {
-                    //Attach to the calendar
-                }
-
-            }
-        }else {
-            System.out.println("Not this intent");
-        }
-    }
-
     public void logOut(){
         SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
