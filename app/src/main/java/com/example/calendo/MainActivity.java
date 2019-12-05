@@ -9,19 +9,23 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.calendo.fragments.AccountFragment;
 import com.example.calendo.fragments.StatisticsFragment;
 import com.example.calendo.fragments.todolist.Task;
 import com.example.calendo.fragments.todolist.TodolistFragment;
 import com.example.calendo.fragments.calendar.CalendarFragment;
+import com.example.calendo.utils.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -29,11 +33,13 @@ import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
 import static com.example.calendo.AddNewTaskActivity.TASK_DESCRIPTION;
 import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
 import static com.example.calendo.fragments.todolist.TodolistFragment.TEXT_REQUEST;
+import static com.example.calendo.utils.User.MY_PREFS_NAME;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FloatingActionButton fab;
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
+    private TextView drawerName;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
 
@@ -43,12 +49,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ProgressDialog nDialog;
 
+    //Reference to the logged user
+    private User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         //Show loading Spinenr
         nDialog = new ProgressDialog(this);
@@ -56,7 +64,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Link UI elements
         fab = findViewById(R.id.fab);
+
+        //Set the name in the Drawer
         navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        drawerName = (TextView) headerView.findViewById(R.id.drawerName);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,6 +82,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Make the toggle rotating
         actionBarDrawerToggle.syncState();
+
+
+
+        //Compose the user object and set the name in the drawer
+        Intent intent= getIntent();
+        user = new User(intent.getStringExtra("userID"), drawerName, this);
+
 
         //Load the correct home pages listView or Calendar View
         if(calendarViewOn){
@@ -136,6 +156,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                 break;
+
+            case R.id.nav_logout:
+
+                logOut();
+
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -157,41 +183,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void logOut(){
+        SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove("userID");
+        editor.apply();
 
+        //Back to the login
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+        finish();
 
-
-        //If it's my response
-        if (requestCode == TEXT_REQUEST) {
-            //If this response is ok
-            if (resultCode == RESULT_OK) {
-
-                //Here I attach the new item to the list
-
-                if(!calendarViewOn){
-                    //Attach to the todolist
-
-                    bundleforFragment = new Bundle();
-//                    bundleforFragment.putString(TASK_TITLE, data.getStringExtra(TASK_TITLE));
-//                    bundleforFragment.putString(TASK_DATE, data.getStringExtra(TASK_DATE));
-//                    bundleforFragment.putString(TASK_DESCRIPTION, data.getStringExtra(TASK_DESCRIPTION));
-
-                    todolistFragment.putArguments(bundleforFragment);
-
-
-
-                }else {
-                    //Attach to the calendar
-                }
-
-            }
-        }else {
-            System.out.println("Not this intent");
-        }
     }
-
 
     //Loading Spinner Methods
 
@@ -208,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void endLoadingSpinner(){
         nDialog.dismiss();
     }
+
 }
 
 

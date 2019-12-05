@@ -43,12 +43,14 @@ public class LoginActivity extends AppCompatActivity {
 
         //README: Enable the line below and comment the Intent to connect to the DB
 
-        //validateLogin(email.getText().toString(), pw.getText().toString());
+        validateLogin(email.getText().toString(), pw.getText().toString());
 
-
+/*
         Intent i = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(i);
         finish();
+
+ */
 
     }
 
@@ -78,6 +80,9 @@ public class LoginActivity extends AppCompatActivity {
 
                                         //Correct password
                                         Intent i = new Intent(LoginActivity.this, MainActivity.class);
+
+                                        //Send to the main activity the root element of the DB -> User ID
+                                        i.putExtra("userID", document.getId());
                                         startActivity(i);
                                         finish();
                                     } else {

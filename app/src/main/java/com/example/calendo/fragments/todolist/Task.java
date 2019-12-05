@@ -5,16 +5,18 @@ public class Task {
     private String id;
     private String title;
     private String category;
-    private String description;
-    private String duedate;
+    private String notes;
+    private String date;
+    private String status;
 
 
-    public Task(String id, String title, String category, String description, String duedate) {
+    public Task(String id, String title, String category, String notes, String date, String status) {
         this.id = id;
         this.title = title;
         this.category = category;
-        this.description = description;
-        this.duedate = duedate;
+        this.notes = notes;
+        this.date = date;
+        this.status = status;
     }
 
     public Task(){
@@ -33,12 +35,20 @@ public class Task {
         return category;
     }
 
-    public String getDescription() {
-        return description;
+    public String getNotes() {
+        return notes;
     }
 
-    public String getDuedate() {
-        return duedate;
+    public String getDate() {
+        return date;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setId(String id) {
@@ -53,11 +63,11 @@ public class Task {
         this.category = category;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setDuedate(String duedate) {
-        this.duedate = duedate;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

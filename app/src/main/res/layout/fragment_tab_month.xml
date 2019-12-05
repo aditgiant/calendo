@@ -14,15 +14,16 @@
 
         <CalendarView
             android:id="@+id/simpleCalendarView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:textSize="18dp"
-            android:text="Holiday"/>
+            android:layout_marginLeft="20dp "
+            android:layout_marginTop="20dp"
+            android:text="Holiday"
+            android:textSize="18dp" />
 
         <ListView
             android:layout_width="wrap_content"

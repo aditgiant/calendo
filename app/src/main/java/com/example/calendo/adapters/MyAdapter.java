@@ -1,6 +1,7 @@
 package com.example.calendo.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import com.example.calendo.utils.QuotesService;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.calendo.utils.User.MY_PREFS_NAME;
+
 //Private class used in the on create method
 public class MyAdapter extends ArrayAdapter<String> {
     Context context;
@@ -32,6 +36,7 @@ public class MyAdapter extends ArrayAdapter<String> {
     //DB Connection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference todoRef = db.collection("Todolist");
+    private CollectionReference usersRef = db.collection("Users");
 
 
     public MyAdapter(Context c, String[] title, String[] description, String[] due, String[] IDs) {
@@ -75,6 +80,12 @@ public class MyAdapter extends ArrayAdapter<String> {
                 //Show the inspirational quotes once the task has been completed
                 quotesService.retrieveQuote(getContext());
 
+                //Retrieve userID
+
+                //Retrieve the userID
+                SharedPreferences sharedPref = getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+                final String userID = sharedPref.getString("userID", "NOUSERFOUND");
+
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -83,7 +94,7 @@ public class MyAdapter extends ArrayAdapter<String> {
 
                         //Delete the content
                         //Here I need the ID of the selected item
-                        todoRef.document(IDs[position]).delete();
+                        usersRef.document(userID).collection("list").document(IDs[position]).delete();
                     }
                 }, 750);
 

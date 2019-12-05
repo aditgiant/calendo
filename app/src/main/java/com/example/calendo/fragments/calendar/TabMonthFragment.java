@@ -89,7 +89,7 @@ public class TabMonthFragment extends Fragment {
         private ArrayList<String> event_description_list  = new ArrayList<>();;
         private ArrayList<String> event_date_list  = new ArrayList<>();;
 
-        private String parameter ="&country=SE&year=2019&month=12";
+        private String parameter ="&country=US&year=2019&month=12";
 
 
         @Override
@@ -113,6 +113,7 @@ public class TabMonthFragment extends Fragment {
                         String event_date = c.getString("date");
                         JSONObject jsonDate = new JSONObject(event_date);
                         String date_event = jsonDate.getString("iso");
+
                         event_name_list.add(event_name);
                         event_description_list.add(event_description);
                         event_date_list.add(date_event);
