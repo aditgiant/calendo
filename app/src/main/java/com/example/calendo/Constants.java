@@ -2,6 +2,6 @@ package com.example.calendo;
 
 
 public class Constants {
-    public static final String API_KEY ="c287647a-0e23-4b41-b10d-3d351dc5549a";
-    public static final String ENDPOINT_HOLIDAY ="https://holidayapi.com/v1/holidays";
+    public static final String ENDPOINT ="https://calendarific.com/api/v2/holidays?";
+    public static final String API_KEY ="d51853b1bd4ea65af1707ab26b6a2081afeed016";
 }

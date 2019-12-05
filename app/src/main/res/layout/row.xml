@@ -10,12 +10,12 @@
     >
 
     <CheckBox
+        android:id="@+id/checkboxTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:focusable="false"
         android:layout_weight="10"
-        android:id="@+id/checkboxTask"/>
+        android:focusable="false" />
 
 
     <LinearLayout

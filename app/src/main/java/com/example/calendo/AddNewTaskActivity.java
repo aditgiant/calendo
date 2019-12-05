@@ -92,9 +92,27 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
     public void saveTask(View view){
 
-        Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), date.getText().toString() );
-        todoRef.add(todolist);
-        finish();
+        //The only mandatory field is the title
+
+        if(title.getText().toString().equals("")){
+            Toast.makeText(this, "You did not enter a title!", Toast.LENGTH_SHORT).show();
+        } else {
+            //Title has been inserted
+
+            //Set date as empty string when a date is not selected
+            String datetoShow;
+            if(date.getText().toString().equals("Set a reminder")){
+                datetoShow= "";
+            }else {
+                datetoShow = date.getText().toString();
+            }
+
+            //Now save the task
+            Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), datetoShow );
+            todoRef.add(todolist);
+            finish();
+
+        }
 
 
     }

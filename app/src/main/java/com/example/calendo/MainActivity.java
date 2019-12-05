@@ -8,11 +8,14 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.calendo.fragments.AccountFragment;
 import com.example.calendo.fragments.StatisticsFragment;
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Bundle bundleforFragment;
     private TodolistFragment todolistFragment;
 
+    private ProgressDialog nDialog;
 
 
     @Override
@@ -45,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        //Show loading Spinenr
+        nDialog = new ProgressDialog(this);
+        showLoadingSpinner();
 
         //Link UI elements
         fab = findViewById(R.id.fab);
@@ -182,6 +190,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else {
             System.out.println("Not this intent");
         }
+    }
+
+
+    //Loading Spinner Methods
+
+    public void showLoadingSpinner(){
+
+        //Activate progress spinner
+        nDialog.setMessage("Loading..");
+        nDialog.setTitle("Get Data");
+        nDialog.setIndeterminate(false);
+        nDialog.setCancelable(true);
+        nDialog.show();
+    }
+
+    public void endLoadingSpinner(){
+        nDialog.dismiss();
     }
 }
 

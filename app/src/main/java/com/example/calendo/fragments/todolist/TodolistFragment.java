@@ -3,8 +3,10 @@ package com.example.calendo.fragments.todolist;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +16,17 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.calendo.MainActivity;
 import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
 import com.example.calendo.adapters.MyAdapter;
@@ -39,15 +46,16 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import io.opencensus.common.ServerStatsFieldEnums;
+
 import static com.example.calendo.App.Channel1;
 
 
 public class TodolistFragment extends Fragment   {
 
-    private CheckBox checkBox;
     private ListView listView;
     private RecyclerView recyclerView;
-    private TextView emptyTodo;
+    private ConstraintLayout emptyTodo;
     private NotificationManagerCompat notificationManager;
 
     //Data
@@ -69,7 +77,6 @@ public class TodolistFragment extends Fragment   {
 
         listView = view.findViewById(R.id.listView);
         recyclerView = view.findViewById(R.id.categoryList);
-        checkBox = view.findViewById(R.id.checkboxTask);
         emptyTodo= view.findViewById(R.id.emptyTodo);
 
 
@@ -107,6 +114,7 @@ public class TodolistFragment extends Fragment   {
     @Override
     public void onStart() {
         super.onStart();
+
 
         todoRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -171,6 +179,8 @@ public class TodolistFragment extends Fragment   {
             dd.add(duedate);
             IDs.add(id);
 
+
+            /*------- DATE TO BE FIXED ------
             SimpleDateFormat formatter= new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date(System.currentTimeMillis());
             notificationManager = NotificationManagerCompat.from(this.getContext());
@@ -181,35 +191,28 @@ public class TodolistFragment extends Fragment   {
 
             }
 
-        }
+             */
 
-        listView.setVisibility(View.VISIBLE);
-        emptyTodo.setVisibility(View.GONE);
+        }
 
 
         MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,d.toArray(new String[0]), dd.toArray(new String[0]), IDs.toArray(new String[0]));
         listView.setAdapter(adapter);
 
-        /*
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        if(queryDocumentSnapshots.isEmpty()){
+            listView.setVisibility(View.GONE);
+            emptyTodo.setVisibility(View.VISIBLE);
 
-                //UI effects
-                onSelectCheckBox(view);
-
-                //Data managmenet
-
-                //Here I need the ID of the selected item
-                todoRef.document(IDs.get(position)).delete();
-                updateTodolist();
+        }else {
+            listView.setVisibility(View.VISIBLE);
+            emptyTodo.setVisibility(View.GONE);
+        }
 
 
+        //Terminate loading spinner started by the activity
+        ((MainActivity)getActivity()).endLoadingSpinner();
 
-            }
-        });
 
-         */
     }
 
     private void renderPushNotification(String title){
