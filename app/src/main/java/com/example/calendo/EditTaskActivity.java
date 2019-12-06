@@ -162,8 +162,20 @@ public class EditTaskActivity extends AppCompatActivity {
     }
 
     public void processDatePickerResult(int year, int month, int day) {
-        String month_string = Integer.toString(month + 1);
-        String day_string = Integer.toString(day);
+        String day_string;
+        String month_string;
+        if (day>=10) {
+            day_string = Integer.toString(day);
+        }
+        else {
+            day_string = "0"+day;
+        }
+        if (month>=9) {
+            month_string = Integer.toString(month+1);
+        }
+        else {
+            month_string = "0"+(month+1);
+        }
         String year_string = Integer.toString(year);
         String dateMessage = (month_string +
                 "/" + day_string + "/" + year_string);
