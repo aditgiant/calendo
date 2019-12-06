@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.calendo.EditTaskActivity;
 import com.example.calendo.MainActivity;
 import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
@@ -120,6 +122,8 @@ public class TodolistFragment extends Fragment   {
 
             }
     });
+
+
     }
 
     @Override
@@ -204,7 +208,16 @@ public class TodolistFragment extends Fragment   {
 
             MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,n.toArray(new String[0]), d.toArray(new String[0]), IDs.toArray(new String[0]));
             listView.setAdapter(adapter);
-
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    String selectedTitle = adapterView.getItemAtPosition(position).toString();
+                    Toast.makeText(getActivity(), listView.getAdapter().getItem(position).toString() +" is selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), EditTaskActivity.class);
+                    intent.putExtra("Title", selectedTitle);
+                    startActivity(intent);
+                }
+            });
 
 
             /*------- DATE TO BE FIXED ------

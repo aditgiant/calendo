@@ -5,15 +5,13 @@
     android:layout_height="match_parent">
 
     <!-- TODO: Update blank fragment layout -->
-    <CalendarView
-        android:id="@+id/simpleCalendarView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-<!--    <FrameLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/fragment_container_month"/>-->
-
-
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <!--    <CalendarView-->
+<!--        android:id="@+id/simpleCalendarView"-->
+<!--        android:layout_width="fill_parent"-->
+<!--        android:layout_height="fill_parent" />-->
 
 </FrameLayout>

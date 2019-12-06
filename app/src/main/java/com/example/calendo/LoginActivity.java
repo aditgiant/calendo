@@ -31,7 +31,9 @@ public class LoginActivity extends AppCompatActivity {
 
         //Link UI elements
         email = findViewById(R.id.emailtext);
+        email.setText("ciao@gmail.com");
         pw = findViewById(R.id.pw);
+        pw.setText("1234");
         login_b = findViewById(R.id.login_button);
 
     }
