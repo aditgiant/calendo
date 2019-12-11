@@ -84,10 +84,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         actionBarDrawerToggle.syncState();
 
 
-
-        //Compose the user object and set the name in the drawer
+        //Handle if the activity is created from the login or the create new task
         Intent intent= getIntent();
-        user = new User(intent.getStringExtra("userID"), drawerName, this);
+
+        if(intent.getStringExtra("userID")==null){
+            //Retrieve userID
+            SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+            String userID = sharedPref.getString("userID", "NOUSERFOUND");
+
+            //Compose the user object and set the name in the drawer taking the id from the shared preferences
+            user = new User(userID, drawerName, this);
+        } else {
+
+            //Compose the user object and set the name in the drawer taking the id from the login page
+            user = new User(intent.getStringExtra("userID"), drawerName, this);
+        }
 
 
         //Load the correct home pages listView or Calendar View
