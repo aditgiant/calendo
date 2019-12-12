@@ -28,6 +28,7 @@ public class User {
     private String name;
     private String lastName;
     private String email;
+    private String pw;
 
     private TextView drawerName;
 
@@ -35,7 +36,15 @@ public class User {
 
     public static final String MY_PREFS_NAME = "MyPrefsFile";
 
+    //Constructor for signUp
+    public User(String name, String lastName, String email, String pw) {
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.pw = pw;
+    }
 
+    //Constructor for the main activity
     public User(String userID, final TextView drawerName, Activity activity) {
         this.userID = userID;
 
@@ -101,5 +110,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPw() {
+        return pw;
+    }
+
+    public void setPw(String pw) {
+        this.pw = pw;
     }
 }
