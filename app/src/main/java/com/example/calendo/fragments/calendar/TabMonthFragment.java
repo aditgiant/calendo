@@ -79,6 +79,7 @@ public class TabMonthFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        renderEvents();
 
     }
 
@@ -158,28 +159,39 @@ public class TabMonthFragment extends Fragment {
 //            Calendar calendarMonth =
 //
             String date = todolist.getDate();
+            int dayInt=0; int monthInt=0; int yearInt=0;
+
+            if(date!=null){
+                String day = date.substring(6, 8);
+                //get date integer
+                 dayInt = Integer.parseInt(day);
+                //get month
+                String month = date.substring(4, 6);
+                 monthInt = Integer.parseInt(month);
+                //get year
+                String year = date.substring(0, 4);
+                 yearInt = Integer.parseInt(year);
+            }
+
+            //date format 20200131
 
             Calendar calendar1 = Calendar.getInstance();
             //get date
-            String day = date.substring(3, 5);
-            //get date integer
-            int dayInt = Integer.parseInt(day) - 1;
-            //get month
-            String month = date.substring(0, 2);
-            int monthInt = Integer.parseInt(month);
-            //get year
-            String year = date.substring(6, 10);
-            int yearInt = Integer.parseInt(year);
+
             //calendar1.add(Integer.parseInt(day), 0);
             Log.d(TAG, "retrieveMonth: " + Calendar.MONTH);
+            Log.d(TAG, "retrieveDay: " + Calendar.DAY_OF_MONTH);
+
+            //26122019
             Log.d(TAG, "retrieveDate: " + date);
-            if (monthInt == (Calendar.MONTH + 10)) {
-                calendar1.add(Calendar.DAY_OF_MONTH, dayInt - Calendar.DAY_OF_MONTH);
+
+//              calendar1.add(dayInt,0);
+                calendar1.set(yearInt, monthInt-1, dayInt);
                 events.add(new EventDay(calendar1, R.drawable.ic_to_do_list));
                 CalendarView calendarView = getActivity().findViewById(R.id.calendarView);
                 calendarView.setEvents(events);
 
-            }
+
         }
     }
 

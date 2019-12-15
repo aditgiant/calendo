@@ -109,19 +109,20 @@ public class TodolistFragment extends Fragment   {
     public void onStart() {
         super.onStart();
 
-        CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
-
-        usersRef.orderBy("date").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if(e!= null){
-                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
-                }
-
-                renderList(queryDocumentSnapshots);
-
-            }
-    });
+//        CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
+//
+//        usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+//                if(e!= null){
+//                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                renderList(queryDocumentSnapshots);
+//
+//            }
+//    });
+        updateTodolist();
 
 
     }
@@ -136,7 +137,7 @@ public class TodolistFragment extends Fragment   {
 
         CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-        usersRef.orderBy("title").get()
+        usersRef.orderBy("date").get()
               .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -199,8 +200,11 @@ public class TodolistFragment extends Fragment   {
             String notes = todolist.getNotes();
             String dates = todolist.getDate();
             String category = todolist.getCategory();
+            String date ="";
+           if(dates!=null) {
 
-           String date =  dates.substring(6,8)+ "/" + dates.substring(4, 6) + "/"+dates.substring(0,4);
+                date = dates.substring(6, 8) + "/" + dates.substring(4, 6) + "/" + dates.substring(0, 4);
+           }
 
             t.add(title);
             n.add(notes);

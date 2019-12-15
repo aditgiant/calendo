@@ -96,8 +96,12 @@ public class EditTaskActivity extends AppCompatActivity {
                     String editID = todolist.getId();
                     String editTitle = todolist.getTitle();
                     String editNotes = todolist.getNotes();
-                    String editDate = todolist.getDate();
-                    String editDates =  editDate.substring(6,8)+ "/" + editDate.substring(4, 6) + "/"+editDate.substring(0,4);
+                    newDate = todolist.getDate();
+                    String editDates="";
+                    if(newDate!=null){
+                         editDates =  newDate.substring(6,8)+ "/" + newDate.substring(4, 6) + "/"+newDate.substring(0,4);
+
+                    }
                     String editCategory = todolist.getCategory();
                     ArrayAdapter myAdap = (ArrayAdapter) dropdownCategory.getAdapter(); //cast to an ArrayAdapter
                     int spinnerPosition = myAdap.getPosition(editCategory);
@@ -189,9 +193,7 @@ public class EditTaskActivity extends AppCompatActivity {
     public void editTask(View view) {
         String datetoShow;
         if(date.getText().toString().equals("Set a reminder")){
-            datetoShow= "";
-        }else {
-            datetoShow = date.getText().toString();
+            newDate= "";
         }
 
         Task newTask = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), newDate , "notCompleted");
