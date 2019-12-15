@@ -96,7 +96,7 @@ public class TodolistFragment extends Fragment   {
 
         //Update the list
         todolist = new ArrayList<>();
-        updateTodolist();
+
 
         //Fill the categories list with user categories
         getCategories();
@@ -111,7 +111,7 @@ public class TodolistFragment extends Fragment   {
 
         CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-        usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        usersRef.orderBy("date").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if(e!= null){
@@ -136,7 +136,7 @@ public class TodolistFragment extends Fragment   {
 
         CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-        usersRef.get()
+        usersRef.orderBy("title").get()
               .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -197,14 +197,17 @@ public class TodolistFragment extends Fragment   {
             String id = todolist.getId();
             String title = todolist.getTitle();
             String notes = todolist.getNotes();
-            String date = todolist.getDate();
+            String dates = todolist.getDate();
             String category = todolist.getCategory();
+
+           String date =  dates.substring(6,8)+ "/" + dates.substring(4, 6) + "/"+dates.substring(0,4);
 
             t.add(title);
             n.add(notes);
             d.add(date);
             IDs.add(id);
             c.add(category); //Not passed to the adapter
+
 
             MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,n.toArray(new String[0]), d.toArray(new String[0]), IDs.toArray(new String[0]));
             listView.setAdapter(adapter);
@@ -309,6 +312,8 @@ public class TodolistFragment extends Fragment   {
         }
 
     }
+
+
 
 
 

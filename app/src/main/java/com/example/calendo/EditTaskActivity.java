@@ -48,6 +48,7 @@ public class EditTaskActivity extends AppCompatActivity {
     //Firestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("Users");
+    private String newDate;
 
     Task currentTask;
 
@@ -87,25 +88,23 @@ public class EditTaskActivity extends AppCompatActivity {
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                Log.d(TAG, "masuk ke whereEqualTo");
-                Log.d(TAG, "size"+ queryDocumentSnapshots.size());
 
                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                     Task todolist = documentSnapshot.toObject(Task.class);
-                    Log.d(TAG, todolist.getTitle());
-                    Log.d(TAG, "masuk for");
+
                     todolist.setId(documentSnapshot.getId());
                     String editID = todolist.getId();
                     String editTitle = todolist.getTitle();
                     String editNotes = todolist.getNotes();
                     String editDate = todolist.getDate();
+                    String editDates =  editDate.substring(6,8)+ "/" + editDate.substring(4, 6) + "/"+editDate.substring(0,4);
                     String editCategory = todolist.getCategory();
                     ArrayAdapter myAdap = (ArrayAdapter) dropdownCategory.getAdapter(); //cast to an ArrayAdapter
                     int spinnerPosition = myAdap.getPosition(editCategory);
                     dropdownCategory.setSelection(spinnerPosition);
                     title.setText(editTitle);
                     notes.setText(editNotes);
-                    date.setText(editDate);
+                    date.setText(editDates);
                     Log.d(TAG, todolist.toString());
                     currentTask = todolist;
                     Log.d(TAG, currentTask.getTitle());
@@ -177,9 +176,12 @@ public class EditTaskActivity extends AppCompatActivity {
             month_string = "0"+(month+1);
         }
         String year_string = Integer.toString(year);
-        String dateMessage = (month_string +
-                "/" + day_string + "/" + year_string);
+        String dateMessage = (day_string +
+                "/" + month_string + "/" + year_string);
         TextView tasktimelabel = findViewById(R.id.TaskTimeLabelEdit);
+
+        newDate = year_string+month_string+day_string;
+
         tasktimelabel.setText(dateMessage);
 
     }
@@ -192,7 +194,7 @@ public class EditTaskActivity extends AppCompatActivity {
             datetoShow = date.getText().toString();
         }
 
-        Task newTask = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), datetoShow , "notCompleted");
+        Task newTask = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), newDate , "notCompleted");
         CollectionReference usersRef = db.collection("Users").document(userID).collection("list");
         usersRef.document(currentTask.getId())
                 .set(newTask)

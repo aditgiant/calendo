@@ -39,6 +39,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
     private TextView date;
     private EditText notes;
     private Spinner dropdownCategory;
+    private String selectedDate;
 
     //Data
     private ArrayList<String> categories;
@@ -133,8 +134,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
             month_string = "0"+(month+1);
         }
         String year_string = Integer.toString(year);
-        String dateMessage = (month_string +
-                "/" + day_string + "/" + year_string);
+        String dateMessage = (day_string +
+                "/" + month_string + "/" + year_string);
+        selectedDate =year_string+month_string+day_string;
+
         TextView tasktimelabel = findViewById(R.id.TaskTimeLabel);
         tasktimelabel.setText(dateMessage);
 
@@ -164,7 +167,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
 
             //Now save the task
-            Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), datetoShow , "notCompleted");
+            Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), selectedDate , "notCompleted");
             usersRef.document(userID).collection("list").add(todolist);
             finish();
 
