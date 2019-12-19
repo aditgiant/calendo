@@ -1,6 +1,7 @@
 package com.example.calendo.fragments.calendar;
 
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -71,6 +72,7 @@ public class TabMonthFragment extends Fragment {
         // Add Events from the Firebase
         View view = inflater.inflate(R.layout.fragment_tab_month, container, false);
         renderEvents();
+
 
 
 
@@ -175,62 +177,101 @@ public class TabMonthFragment extends Fragment {
     }
 
 
-            public class RetrievedTask extends AsyncTask<Void, Void, Void> {
-
-                private ArrayList<String> event_name_list = new ArrayList<>();
-                private ArrayList<String> event_description_list = new ArrayList<>();
-                ;
-                private ArrayList<String> event_date_list = new ArrayList<>();
-                ;
-
-                private String parameter = "&country=US&year=2019&month=12";
 
 
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    String url = ENDPOINT + "api_key=" + API_KEY + parameter;
-                    Log.d(TAG, url);
-                    HttpHandler sh = new HttpHandler();
-                    String jsonStr = sh.makeServiceCall(url);
-                    Log.e(TAG, "Response from url: " + jsonStr);
+        public class RetrievedTask extends AsyncTask<Void, Void, Void> {
 
-                    if (jsonStr != null) {
-                        try {
-                            JSONObject jsonObj = new JSONObject(jsonStr);
-                            JSONObject response = jsonObj.getJSONObject("response");
-                            JSONArray holiday = response.getJSONArray("holidays");
+            private ArrayList<String> event_name_list = new ArrayList<>();
+            private ArrayList<String> event_description_list = new ArrayList<>();
+            ;
+            private ArrayList<String> event_date_list = new ArrayList<>();
+            ;
 
-                            for (int i = 0; i < holiday.length(); i++) {
-                                JSONObject c = holiday.getJSONObject(i);
-                                String event_name = c.getString("name");
-                                String event_description = c.getString("description");
-                                String event_date = c.getString("date");
-                                JSONObject jsonDate = new JSONObject(event_date);
-                                String date_event = jsonDate.getString("iso");
+            private String parameter = "&country=US&year=2019&month=12";
 
-                                event_name_list.add(event_name);
-                                event_description_list.add(event_description);
-                                event_date_list.add(date_event);
-                            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                String url = ENDPOINT + "api_key=" + API_KEY + parameter;
+                Log.d(TAG, url);
+                HttpHandler sh = new HttpHandler();
+                String jsonStr = sh.makeServiceCall(url);
+                Log.e(TAG, "Response from url: " + jsonStr);
+                List<EventDay> events = new ArrayList<>();
+
+
+                if (jsonStr != null) {
+                    try {
+                        JSONObject jsonObj = new JSONObject(jsonStr);
+                        JSONObject response = jsonObj.getJSONObject("response");
+                        JSONArray holiday = response.getJSONArray("holidays");
+
+                        for (int i = 0; i < holiday.length(); i++) {
+                            JSONObject c = holiday.getJSONObject(i);
+                            String event_name = c.getString("name");
+                            String event_description = c.getString("description");
+                            String event_date = c.getString("date");
+                            JSONObject jsonDate = new JSONObject(event_date);
+                            String date_event = jsonDate.getString("iso");
+
+                            event_name_list.add(event_name);
+                            event_description_list.add(event_description);
+                            event_date_list.add(date_event);
+
+//                            //render to calendar
+//                            Calendar calendar1 = Calendar.getInstance();
+//                            //get date
+//                            //format date 2018-12-31
+//                            String date = date_event;
+//                            int dayInt=0; int monthInt=0; int yearInt=0;
+//
+//                            if(!date.equals("")){
+//                                String day = date.substring(8, 10);
+//                                //get date integer
+//                                dayInt = Integer.parseInt(day);
+//                                //get month
+//                                String month = date.substring(5, 7);
+//                                monthInt = Integer.parseInt(month);
+//                                //get year
+//                                String year = date.substring(0, 4);
+//                                yearInt = Integer.parseInt(year);
+//                            }
+//                            //calendar1.add(Integer.parseInt(day), 0);
+//                            Log.d(TAG, "retrieveMonth: " + Calendar.MONTH);
+//                            Log.d(TAG, "retrieveDay: " + Calendar.DAY_OF_MONTH);
+//
+//                            //26122019
+//                            Log.d(TAG, "retrieveDate: " + date);
+//
+//            //              calendar1.add(dayInt,0);
+//                            calendar1.set(yearInt, monthInt-1, dayInt);
+//                            events.add(new EventDay(calendar1, R.drawable.ic_to_do_list));
+//                            CalendarView calendarView = getActivity().findViewById(R.id.calendarView);
+//                            calendarView.setEvents(events);
+
+
+
                         }
-                    }
-                    return null;
 
-                }
-
-                @Override
-                protected void onPostExecute(Void result) {
-                    super.onPostExecute(result);
-                    if(getContext()!=null) {
-                        PublicHolidayAdapter publicHolidayAdapter = new PublicHolidayAdapter(getContext(), event_name_list.toArray(new String[0]), event_description_list.toArray(new String[0]), event_date_list.toArray(new String[0]));
-                        TabMonthFragment.data.setAdapter(publicHolidayAdapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
+                return null;
 
             }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                if(getContext()!=null) {
+                    PublicHolidayAdapter publicHolidayAdapter = new PublicHolidayAdapter(getContext(), event_name_list.toArray(new String[0]), event_description_list.toArray(new String[0]), event_date_list.toArray(new String[0]));
+                    TabMonthFragment.data.setAdapter(publicHolidayAdapter);
+                }
+            }
+
+        }
 
         }
 
