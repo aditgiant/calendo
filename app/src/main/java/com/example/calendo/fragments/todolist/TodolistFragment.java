@@ -109,20 +109,25 @@ public class TodolistFragment extends Fragment   {
     public void onStart() {
         super.onStart();
 
-//        CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
-//
-//        usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-//                if(e!= null){
-//                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                renderList(queryDocumentSnapshots);
-//
-//            }
-//    });
-        updateTodolist();
+        CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
+
+        //We need this listener each time we complete a task to update the list
+
+        usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {              if(e!= null){
+                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
+               }
+
+                updateTodolist();
+
+               //renderList(queryDocumentSnapshots);
+
+            }
+        });
+
+        //It should be called each time from the listener
+        //updateTodolist();
 
 
     }
