@@ -43,6 +43,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -149,6 +150,8 @@ public class TodolistFragment extends Fragment   {
 
     }
 
+
+
     public void getCategories(){
 
         categories = new ArrayList<>();
@@ -184,6 +187,7 @@ public class TodolistFragment extends Fragment   {
         final ArrayList<String> d = new ArrayList<>();
         final ArrayList<String> IDs = new ArrayList<>();
         final ArrayList<String> c = new ArrayList<>();
+        final ArrayList<String> s = new ArrayList<>();
 
         if(queryDocumentSnapshots.size()==0){
             listView.setVisibility(View.GONE);
@@ -200,21 +204,26 @@ public class TodolistFragment extends Fragment   {
             String notes = todolist.getNotes();
             String dates = todolist.getDate();
             String category = todolist.getCategory();
+            String status = todolist.getStatus();
             String date ="";
-           if(dates!=null) {
+               if(!dates.equals("")) {
 
-                date = dates.substring(6, 8) + "/" + dates.substring(4, 6) + "/" + dates.substring(0, 4);
-           }
+                    date = dates.substring(6, 8) + "/" + dates.substring(4, 6) + "/" + dates.substring(0, 4);
+               }
+
 
             t.add(title);
             n.add(notes);
             d.add(date);
             IDs.add(id);
             c.add(category); //Not passed to the adapter
+            s.add(status);
 
 
-            MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,n.toArray(new String[0]), d.toArray(new String[0]), IDs.toArray(new String[0]));
+            MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,n.toArray(new String[0]), d.toArray(new String[0]), IDs.toArray(new String[0]), s.toArray(new String[0]));
             listView.setAdapter(adapter);
+
+
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {

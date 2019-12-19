@@ -1,63 +1,42 @@
 package com.example.calendo.fragments.calendar;
 
 
-
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-
-import android.content.Context;
 import android.os.AsyncTask;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
 import androidx.fragment.app.Fragment;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
-
 import com.example.calendo.R;
+import com.example.calendo.adapters.PublicHolidayAdapter;
 import com.example.calendo.fragments.todolist.Task;
+import com.example.calendo.utils.HttpHandler;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
-import static com.example.calendo.utils.User.MY_PREFS_NAME;
-import static com.google.protobuf.WireFormat.JavaType.INT;
-
-import android.widget.ListView;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import com.example.calendo.R;
-import com.example.calendo.adapters.PublicHolidayAdapter;
-import com.example.calendo.utils.HttpHandler;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
-
+import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.calendo.Constants.API_KEY;
 import static com.example.calendo.Constants.ENDPOINT;
+import static com.example.calendo.utils.User.MY_PREFS_NAME;
 
 
 
@@ -161,7 +140,7 @@ public class TabMonthFragment extends Fragment {
             String date = todolist.getDate();
             int dayInt=0; int monthInt=0; int yearInt=0;
 
-            if(date!=null){
+            if(date!=""){
                 String day = date.substring(6, 8);
                 //get date integer
                  dayInt = Integer.parseInt(day);

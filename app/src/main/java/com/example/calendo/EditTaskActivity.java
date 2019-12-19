@@ -49,6 +49,7 @@ public class EditTaskActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference usersRef = db.collection("Users");
     private String newDate;
+    private String status;
 
     Task currentTask;
 
@@ -96,9 +97,10 @@ public class EditTaskActivity extends AppCompatActivity {
                     String editID = todolist.getId();
                     String editTitle = todolist.getTitle();
                     String editNotes = todolist.getNotes();
+                    status = todolist.getStatus();
                     newDate = todolist.getDate();
                     String editDates="";
-                    if(newDate!=null){
+                    if(!newDate.equals("")){
                          editDates =  newDate.substring(6,8)+ "/" + newDate.substring(4, 6) + "/"+newDate.substring(0,4);
 
                     }
@@ -196,7 +198,7 @@ public class EditTaskActivity extends AppCompatActivity {
             newDate= "";
         }
 
-        Task newTask = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), newDate , "notCompleted");
+        Task newTask = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), newDate , status);
         CollectionReference usersRef = db.collection("Users").document(userID).collection("list");
         usersRef.document(currentTask.getId())
                 .set(newTask)
