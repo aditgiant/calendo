@@ -31,7 +31,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendo.EditTaskActivity;
+import com.example.calendo.LoginActivity;
 import com.example.calendo.MainActivity;
+import com.example.calendo.NewCategoryActivity;
+import com.example.calendo.SignUpActivity;
 import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
 import com.example.calendo.adapters.MyAdapter;
@@ -99,8 +102,21 @@ public class TodolistFragment extends Fragment   {
         todolist = new ArrayList<>();
 
 
-        //Fill the categories list with user categories
-        getCategories();
+        //Fill the categories list with user categories, attach a listener method that updates automatically
+
+        CollectionReference usersRef2 = db.collection("Users").document(this.userID).collection("categories");
+
+        //We need this listener each time we delete a category
+        usersRef2.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {              if(e!= null){
+                Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
+            }
+
+                getCategories();
+
+            }
+        });
 
         return view;
     }
@@ -110,20 +126,28 @@ public class TodolistFragment extends Fragment   {
     public void onStart() {
         super.onStart();
 
-//        CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
-//
-//        usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-//                if(e!= null){
-//                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                renderList(queryDocumentSnapshots);
-//
-//            }
-//    });
-        updateTodolist();
+        //Update to do list
+
+        CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
+
+        //We need this listener each time we complete a task to update the list
+
+        usersRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(e!= null){
+                    Toast.makeText(getContext(), "Error while loading", Toast.LENGTH_SHORT).show();
+               }
+
+                updateTodolist();
+
+//               renderList(queryDocumentSnapshots);
+
+            }
+        });
+
+        //It should be called each time from the listener
+//        updateTodolist();
 
 
     }
@@ -171,6 +195,10 @@ public class TodolistFragment extends Fragment   {
 
                             }
 
+                            //Add the last category
+                            categories.add("New category");
+
+                            //Display the categories
                             renderCategories();
 
                         } else {
@@ -178,6 +206,7 @@ public class TodolistFragment extends Fragment   {
                         }
                     }
                 });
+
 
     }
 
@@ -206,10 +235,11 @@ public class TodolistFragment extends Fragment   {
             String category = todolist.getCategory();
             String status = todolist.getStatus();
             String date ="";
-               if(!dates.equals("")) {
 
-                    date = dates.substring(6, 8) + "/" + dates.substring(4, 6) + "/" + dates.substring(0, 4);
-               }
+           if(!dates.equals("")) {
+
+                date = dates.substring(6, 8) + "/" + dates.substring(4, 6) + "/" + dates.substring(0, 4);
+           }
 
 
             t.add(title);
@@ -219,9 +249,11 @@ public class TodolistFragment extends Fragment   {
             c.add(category); //Not passed to the adapter
             s.add(status);
 
+            if(getContext()!=null) {
 
-            MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]) ,n.toArray(new String[0]), d.toArray(new String[0]), IDs.toArray(new String[0]), s.toArray(new String[0]));
-            listView.setAdapter(adapter);
+                MyAdapter adapter = new MyAdapter(getContext(), t.toArray(new String[0]), n.toArray(new String[0]), d.toArray(new String[0]), IDs.toArray(new String[0]), s.toArray(new String[0]));
+                listView.setAdapter(adapter);
+            }
 
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -304,23 +336,33 @@ public class TodolistFragment extends Fragment   {
     }
 
     private void filterList (String item){
-        if(item.equals("All")){
-            updateTodolist();
-        }else {
 
-            CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
+        switch (item){
+            case "All":
+                updateTodolist();
+                break;
 
-            usersRef.whereEqualTo("category", item)
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            case "New category":
+                Intent i = new Intent( getActivity(), NewCategoryActivity.class);
+                startActivity(i);
+                break;
 
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                default:
 
-                            renderList(queryDocumentSnapshots);
+                    CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-                        }
-                    });
+                    usersRef.whereEqualTo("category", item)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                    renderList(queryDocumentSnapshots);
+
+                                }
+                            });
+
 
         }
 

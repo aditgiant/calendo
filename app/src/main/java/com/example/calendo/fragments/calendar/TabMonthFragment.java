@@ -224,8 +224,10 @@ public class TabMonthFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void result) {
                     super.onPostExecute(result);
-                    PublicHolidayAdapter publicHolidayAdapter = new PublicHolidayAdapter(getContext(), event_name_list.toArray(new String[0]), event_description_list.toArray(new String[0]), event_date_list.toArray(new String[0]));
-                    TabMonthFragment.data.setAdapter(publicHolidayAdapter);
+                    if(getContext()!=null) {
+                        PublicHolidayAdapter publicHolidayAdapter = new PublicHolidayAdapter(getContext(), event_name_list.toArray(new String[0]), event_description_list.toArray(new String[0]), event_date_list.toArray(new String[0]));
+                        TabMonthFragment.data.setAdapter(publicHolidayAdapter);
+                    }
                 }
 
             }

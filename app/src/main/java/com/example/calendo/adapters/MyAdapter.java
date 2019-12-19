@@ -72,6 +72,7 @@ public class MyAdapter extends ArrayAdapter<String> {
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.row, parent, false);
         }
+
         myTitle = convertView.findViewById(R.id.titleTodo);
         myDue = convertView.findViewById(R.id.dueTodo);
         myDescription = convertView.findViewById(R.id.descriptionTodo);

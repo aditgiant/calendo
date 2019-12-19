@@ -12,11 +12,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".NewCategoryActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Add new category"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".EditTaskActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".SignUpActivity"
-            android:parentActivityName=".LoginActivity"
+        <activity
+            android:name=".SignUpActivity"
             android:label="Sign up"
+            android:parentActivityName=".LoginActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

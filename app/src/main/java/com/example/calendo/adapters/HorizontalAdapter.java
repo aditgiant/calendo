@@ -39,7 +39,27 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+        //Set the description
         holder.taskCategory.setText(list[position]);
+        //Set the icon using a string stored in the DB
+
+        //Category all
+        if (position == 0 ){
+            holder.buttonCategory.setImageResource(R.drawable.ic_all);
+        } else {
+
+            //Last element in the categories list
+            if(position == list.length-1){
+                holder.buttonCategory.setImageResource(R.drawable.ic_listadd);
+            } else {
+                //Retrieve the string from the DB and set the icon of the normal
+                holder.buttonCategory.setImageResource(R.drawable.ic_book_black_24dp);
+            }
+        }
+
+
+
+
         holder.buttonCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
