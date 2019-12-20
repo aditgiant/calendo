@@ -141,13 +141,9 @@ public class TodolistFragment extends Fragment   {
 
                 updateTodolist();
 
-//               renderList(queryDocumentSnapshots);
-
             }
         });
 
-        //It should be called each time from the listener
-//        updateTodolist();
 
 
     }
@@ -162,7 +158,8 @@ public class TodolistFragment extends Fragment   {
 
         CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-        usersRef.orderBy("date").get()
+        //Take just the uncompleted tasks
+        usersRef.whereEqualTo("status", "uncompleted").get()
               .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -236,7 +233,7 @@ public class TodolistFragment extends Fragment   {
             String status = todolist.getStatus();
             String date ="";
 
-           if(!dates.equals("")) {
+           if(dates != null && !dates.equals("")) {
 
                 date = dates.substring(6, 8) + "/" + dates.substring(4, 6) + "/" + dates.substring(0, 4);
            }
@@ -315,7 +312,10 @@ public class TodolistFragment extends Fragment   {
         recyclerView.setLayoutManager(MyLayoutManager);
 
         //Terminate loading spinner started by the activity
-        ((MainActivity)getActivity()).endLoadingSpinner();
+        if(getActivity() != null){
+            ((MainActivity)getActivity()).endLoadingSpinner();
+        }
+
 
     }
 
@@ -351,7 +351,7 @@ public class TodolistFragment extends Fragment   {
 
                     CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-                    usersRef.whereEqualTo("category", item)
+                    usersRef.whereEqualTo("category", item).whereEqualTo("status", "uncompleted")
                             .get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
