@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,7 +28,9 @@ import static com.example.calendo.utils.User.MY_PREFS_NAME;
 public class EditCategoryActivity extends AppCompatActivity {
     private EditText categoryName;
     private FloatingActionButton save;
+    private Button delete;
     private String oldCategory;
+
 
 
     //Firestore
@@ -37,11 +40,12 @@ public class EditCategoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_category);
+        setContentView(R.layout.activity_edit_category);
 
         //Link UI elements
         categoryName = findViewById(R.id.categoryName);
         save = findViewById(R.id.b_save_category);
+        delete = findViewById(R.id.b_delete);
 
         //Get the value of the old category
         Intent i = getIntent();
@@ -74,10 +78,6 @@ public class EditCategoryActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-
-                                System.out.println("Here");
-
-                                System.out.println(task.getResult().size());
 
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
@@ -125,7 +125,63 @@ public class EditCategoryActivity extends AppCompatActivity {
     }
 
 
+    public void deleteList(View view) {
 
+        //Retrieve the userID
+        SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String userID = sharedPref.getString("userID", "NOUSERFOUND");
+
+        //Delete all the items of that category
+        usersRef.document(userID).collection("list")
+                .whereEqualTo("category", oldCategory)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                //Update the document known the ID of the task
+                                System.out.println(document.getId());
+                                usersRef.document(userID).collection("list").document(document.getId()).delete();
+
+                            }
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+        //Delete the category name
+        usersRef.document(userID).collection("categories")
+                .whereEqualTo("categoryName", oldCategory)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                //Update the document known the ID of the task
+                                usersRef.document(userID).collection("categories").document(document.getId()).delete();
+
+                            }
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+
+        //Once the update is finished
+        finish();
+
+    }
 }
 
 
