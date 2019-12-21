@@ -6,29 +6,38 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.calendo.fragments.AccountFragment;
 import com.example.calendo.fragments.StatisticsFragment;
-import com.example.calendo.fragments.todolist.Task;
 import com.example.calendo.fragments.todolist.TodolistFragment;
 import com.example.calendo.fragments.calendar.CalendarFragment;
 import com.example.calendo.utils.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.example.calendo.AddNewTaskActivity.TASK_DATE;
 import static com.example.calendo.AddNewTaskActivity.TASK_DESCRIPTION;
 import static com.example.calendo.AddNewTaskActivity.TASK_TITLE;
@@ -51,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Reference to the logged user
     private User user;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private AccountFragment account;
 
 
     @Override
@@ -121,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -134,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 calendarViewOn=true;
 
+                fab.setVisibility(View.VISIBLE);
+
 
                 break;
             case R.id.todolist_button:
@@ -142,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                 calendarViewOn= false;
+
+                fab.setVisibility(View.VISIBLE);
 
                 break;
         }
@@ -152,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     //Implements the method to select the fragment, I inserted implements to do this
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -159,12 +177,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new StatisticsFragment()).commit();
 
+                fab.setVisibility(View.INVISIBLE);
+
 
                 break;
             case R.id.nav_account:
+                account = new AccountFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new AccountFragment()).commit();
+                        account).commit();
 
+                fab.setVisibility(View.INVISIBLE);
 
                 break;
 
@@ -221,6 +243,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void endLoadingSpinner(){
         nDialog.dismiss();
+    }
+
+    public void saveAccount(View view) {
+
+        account.saveAccount(view);
+
     }
 
 }
