@@ -352,6 +352,7 @@ public class TodolistFragment extends Fragment   {
                     CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
                     usersRef.whereEqualTo("category", item)
+                            .orderBy("date")
                             .get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 

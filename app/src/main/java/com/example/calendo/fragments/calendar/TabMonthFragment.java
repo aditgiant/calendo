@@ -183,11 +183,8 @@ public class TabMonthFragment extends Fragment {
 
             private ArrayList<String> event_name_list = new ArrayList<>();
             private ArrayList<String> event_description_list = new ArrayList<>();
-            ;
             private ArrayList<String> event_date_list = new ArrayList<>();
-            ;
-
-            private String parameter = "&country=US&year=2019&month=12";
+            private String parameter = "&country=US&year=2019";
 
 
 
@@ -198,7 +195,7 @@ public class TabMonthFragment extends Fragment {
                 HttpHandler sh = new HttpHandler();
                 String jsonStr = sh.makeServiceCall(url);
                 Log.e(TAG, "Response from url: " + jsonStr);
-                List<EventDay> events = new ArrayList<>();
+
 
 
                 if (jsonStr != null) {
@@ -219,36 +216,6 @@ public class TabMonthFragment extends Fragment {
                             event_description_list.add(event_description);
                             event_date_list.add(date_event);
 
-//                            //render to calendar
-//                            Calendar calendar1 = Calendar.getInstance();
-//                            //get date
-//                            //format date 2018-12-31
-//                            String date = date_event;
-//                            int dayInt=0; int monthInt=0; int yearInt=0;
-//
-//                            if(!date.equals("")){
-//                                String day = date.substring(8, 10);
-//                                //get date integer
-//                                dayInt = Integer.parseInt(day);
-//                                //get month
-//                                String month = date.substring(5, 7);
-//                                monthInt = Integer.parseInt(month);
-//                                //get year
-//                                String year = date.substring(0, 4);
-//                                yearInt = Integer.parseInt(year);
-//                            }
-//                            //calendar1.add(Integer.parseInt(day), 0);
-//                            Log.d(TAG, "retrieveMonth: " + Calendar.MONTH);
-//                            Log.d(TAG, "retrieveDay: " + Calendar.DAY_OF_MONTH);
-//
-//                            //26122019
-//                            Log.d(TAG, "retrieveDate: " + date);
-//
-//            //              calendar1.add(dayInt,0);
-//                            calendar1.set(yearInt, monthInt-1, dayInt);
-//                            events.add(new EventDay(calendar1, R.drawable.ic_to_do_list));
-//                            CalendarView calendarView = getActivity().findViewById(R.id.calendarView);
-//                            calendarView.setEvents(events);
 
 
 
@@ -265,9 +232,40 @@ public class TabMonthFragment extends Fragment {
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
+                List<EventDay> events = new ArrayList<>();
                 if(getContext()!=null) {
                     PublicHolidayAdapter publicHolidayAdapter = new PublicHolidayAdapter(getContext(), event_name_list.toArray(new String[0]), event_description_list.toArray(new String[0]), event_date_list.toArray(new String[0]));
                     TabMonthFragment.data.setAdapter(publicHolidayAdapter);
+//                    for(int i =0; i<event_date_list.toArray().length;i++){
+//                                                    //render to calendar
+//                            Calendar calendar1 = Calendar.getInstance();
+//                            //get date
+//                            //format date 2018-12-31
+//                            String date = event_date_list.toArray(new String[0])[i];
+//                            int dayInt=0; int monthInt=0; int yearInt=0;
+//
+//                            if(!date.equals("")){
+//                                String day = date.substring(8, 10);
+//                                //get date integer
+//                                dayInt = Integer.parseInt(day);
+//                                //get month
+//                                String month = date.substring(5, 7);
+//                                monthInt = Integer.parseInt(month);
+//                                //get year
+//                                String year = date.substring(0, 4);
+//                                yearInt = Integer.parseInt(year);
+//                            }
+//
+//                            calendar1.set(yearInt, monthInt-1, dayInt);
+//                            events.add(new EventDay(calendar1, R.drawable.ic_support));
+//                            CalendarView calendarView = getActivity().findViewById(R.id.calendarView);
+//                            calendarView.setEvents(events);
+//
+//
+//
+//
+//
+//                    }
                 }
             }
 
