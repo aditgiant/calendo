@@ -3,6 +3,7 @@ package com.example.calendo.fragments.calendar;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -122,7 +123,7 @@ public class TabMonthFragment extends Fragment {
 
         CollectionReference tasklist = db.collection("Users").document(userID).collection("list");
 
-        tasklist.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        tasklist.whereEqualTo("status", "uncompleted").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                  retrieveDate(queryDocumentSnapshots);
@@ -142,7 +143,7 @@ public class TabMonthFragment extends Fragment {
             String date = todolist.getDate();
             int dayInt=0; int monthInt=0; int yearInt=0;
 
-            if(date!=""){
+            if(!date.equals("")){
                 String day = date.substring(6, 8);
                 //get date integer
                  dayInt = Integer.parseInt(day);
@@ -168,8 +169,10 @@ public class TabMonthFragment extends Fragment {
 
 //              calendar1.add(dayInt,0);
                 calendar1.set(yearInt, monthInt-1, dayInt);
-                events.add(new EventDay(calendar1, R.drawable.ic_to_do_list));
+                events.add(new EventDay(calendar1, R.drawable.task_icon));
                 CalendarView calendarView = getActivity().findViewById(R.id.calendarView);
+                calendarView.setHeaderColor(R.color.colorAccent);
+
                 calendarView.setEvents(events);
 
 
