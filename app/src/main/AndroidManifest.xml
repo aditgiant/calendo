@@ -36,6 +36,7 @@
         <activity
             android:name=".SignUpActivity"
             android:label="Sign up"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".LoginActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data

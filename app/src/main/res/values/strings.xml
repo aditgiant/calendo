@@ -19,8 +19,14 @@
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="repeat_pw">Repeat Password</string>
     <string name="noaccount">Don\'t have an account?</string>
     <string name="signup">Sign Up</string>
     <string name="forgot">Forgot Password?</string>
+    <string name="welcome_text">Welcome Back!</string>
+    <string name="create_account">Start Using Calendo</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="login_account">Login to Calendo</string>
 
 </resources>
