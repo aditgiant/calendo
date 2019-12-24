@@ -29,5 +29,10 @@
     <string name="last_name">Last Name</string>
     <string name="login_account">Login to Calendo</string>
     <string name="my_account">My Account</string>
+    <string name="add_title">Add Title</string>
+    <string name="choose_category">Choose Category</string>
+    <string name="set_date">Set Schedule</string>
+    <string name="pick_date">Pick a Date</string>
+    <string name="add_notes">Add Notes</string>
 
 </resources>
