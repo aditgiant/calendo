@@ -28,5 +28,6 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="login_account">Login to Calendo</string>
+    <string name="my_account">My Account</string>
 
 </resources>

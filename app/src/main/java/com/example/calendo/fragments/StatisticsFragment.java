@@ -1,23 +1,18 @@
 package com.example.calendo.fragments;
 
-import android.app.usage.UsageEvents;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.chart.common.listener.Event;
-import com.anychart.chart.common.listener.ListenersInterface;
 import com.anychart.charts.Pie;
 import com.anychart.enums.Align;
 import com.anychart.enums.LegendLayout;
@@ -88,12 +83,13 @@ public class StatisticsFragment extends Fragment {
         }
 
         data.add(new ValueDataEntry("Completed", countCompleted));
-        data.add(new ValueDataEntry("UnCompleted", countUncompleted));
+        data.add(new ValueDataEntry("Not Completed", countUncompleted));
 
         Pie pie = AnyChart.pie();
 
         pie.data(data);
-        pie.title("Completion Todo List");
+        pie.title("Your Achievement (%)");
+        pie.interactivity();
         pie.labels().position("outside");
 
         pie.legend().title().enabled(true);
@@ -109,5 +105,7 @@ public class StatisticsFragment extends Fragment {
         anyChartView.setChart(pie);
 
     }
+
+
 
 }
