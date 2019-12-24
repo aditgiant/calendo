@@ -2,6 +2,7 @@ package com.example.calendo.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(view.getContext(),  "Position no: "+ position, Toast.LENGTH_LONG).show();
+                holder.buttonCategory.setBackgroundColor(Color.BLUE);
+
                 listener.onItemClick(holder);
 
 

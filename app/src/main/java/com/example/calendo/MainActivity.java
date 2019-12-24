@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new CalendarFragment()).commit();
 
                 calendarViewOn=true;
+                toolbar.setTitle("Calendar");
 
                 fab.setVisibility(View.VISIBLE);
 
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.todolist_button:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new TodolistFragment()).commit();
+                toolbar.setTitle("Todo List");
 
 
                 calendarViewOn= false;
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_statistics:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new StatisticsFragment()).commit();
+                toolbar.setTitle("Statistics");
 
                 fab.setVisibility(View.INVISIBLE);
 
@@ -185,6 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 account = new AccountFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         account).commit();
+                toolbar.setTitle("Account");
 
                 fab.setVisibility(View.INVISIBLE);
 
@@ -234,8 +238,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void showLoadingSpinner(){
 
         //Activate progress spinner
-        nDialog.setMessage("Loading..");
-        nDialog.setTitle("Get Data");
+        nDialog.setMessage("Wait a moment..");
+        nDialog.setTitle("Loading");
         nDialog.setIndeterminate(false);
         nDialog.setCancelable(true);
         nDialog.show();

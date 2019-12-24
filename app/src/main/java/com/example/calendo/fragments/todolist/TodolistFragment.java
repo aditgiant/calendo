@@ -141,7 +141,7 @@ public class TodolistFragment extends Fragment   {
 
         //Take just the uncompleted tasks
         usersRef.whereEqualTo("status", "uncompleted").get()
-              .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+           .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                       renderList(queryDocumentSnapshots);

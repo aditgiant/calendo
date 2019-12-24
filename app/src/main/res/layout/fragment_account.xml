@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="32sp"
+    android:padding="32sp"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -161,7 +161,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
-            android:text="New password"
+            android:text="New Password"
             android:textSize="18sp" />
 
         <EditText
@@ -187,7 +187,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
-            android:text="Repeat new password"
+            android:text="Repeat New Password"
             android:textSize="18sp" />
 
         <EditText
@@ -209,11 +209,12 @@
         <include layout="@layout/floating_button_account" />
 
 
-
     </LinearLayout>
 
 
-</ScrollView>
+    </ScrollView>
+
+
 
 
 
