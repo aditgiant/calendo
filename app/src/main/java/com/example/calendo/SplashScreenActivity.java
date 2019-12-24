@@ -2,6 +2,7 @@ package com.example.calendo;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.Animation;
@@ -22,6 +23,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         TextView subheading = findViewById(R.id.subheading);
         Animation fromBottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
         subheading.setAnimation(fromBottom);
+
 
         SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String value = sharedPref.getString("userID", "NOUSERFOUND");
