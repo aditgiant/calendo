@@ -34,5 +34,11 @@
     <string name="set_date">Set Schedule</string>
     <string name="pick_date">Pick a Date</string>
     <string name="add_notes">Add Notes</string>
+    <string name="edit_title">Edit Title</string>
+    <string name="edit_category">Change Category</string>
+    <string name="edit_set_date">Change Schedule</string>
+    <string name="edit_pick_date">Edit the Date</string>
+    <string name="edit_notes">Edit Notes</string>
+
 
 </resources>

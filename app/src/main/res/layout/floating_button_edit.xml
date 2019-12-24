@@ -13,7 +13,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:onClick="editTask"
-        app:backgroundTint="#1DB954"
+        app:backgroundTint="@color/colorAccent"
         app:srcCompat="@drawable/ic_check" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
