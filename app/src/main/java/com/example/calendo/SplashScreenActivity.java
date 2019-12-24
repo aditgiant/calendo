@@ -29,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         String value = sharedPref.getString("userID", "NOUSERFOUND");
         System.out.println(value);
 
-        new Handler().postDelayed(new myRunnable(value), 2000);
+        new Handler().postDelayed(new myRunnable(value), 3000);
 
 
     }

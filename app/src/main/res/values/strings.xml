@@ -16,5 +16,11 @@
     <string name="calendar_icon">Calendar</string>
     <string name="to_do_list_icon">To do list</string>
     <string name="logout">Logout</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="noaccount">Don\'t have an account?</string>
+    <string name="signup">Sign Up</string>
+    <string name="forgot">Forgot Password?</string>
 
 </resources>

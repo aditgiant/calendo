@@ -30,7 +30,9 @@
                 android:value=".MainActivity" />
         </activity>
         <activity android:name=".EditTaskActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity
             android:name=".SignUpActivity"
             android:label="Sign up"
