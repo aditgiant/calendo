@@ -1,16 +1,14 @@
 package com.example.calendo;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.Map;
 
 import static com.example.calendo.utils.User.MY_PREFS_NAME;
 
@@ -21,6 +19,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash_screen);
+        TextView subheading = findViewById(R.id.subheading);
+        Animation fromBottom = AnimationUtils.loadAnimation(this, R.anim.frombottom);
+        subheading.setAnimation(fromBottom);
 
         SharedPreferences sharedPref = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         String value = sharedPref.getString("userID", "NOUSERFOUND");

@@ -1,6 +1,7 @@
 package com.example.calendo.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.calendo.EditCategoryActivity;
+import com.example.calendo.MainActivity;
+import com.example.calendo.NewCategoryActivity;
 import com.example.calendo.R;
 
 public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
@@ -41,7 +45,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         //Set the description
         holder.taskCategory.setText(list[position]);
-        //Set the icon using a string stored in the DB
 
         //Category all
         if (position == 0 ){
@@ -59,7 +62,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
 
 
-
+        //Filter items
         holder.buttonCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,6 +70,24 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 listener.onItemClick(holder);
 
 
+            }
+        });
+
+        holder.buttonCategory.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                //In the case of list added by the user, we skip the all category and the add new cateogry
+
+
+                //if(position != 0 && position == list.length-1){
+
+                    Intent i = new Intent(context, EditCategoryActivity.class);
+                    i.putExtra("categoryName", holder.taskCategory.getText().toString());
+                    context.startActivity(i);
+
+                //}
+
+                return true;
             }
         });
 

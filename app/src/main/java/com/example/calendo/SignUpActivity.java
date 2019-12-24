@@ -1,24 +1,15 @@
 package com.example.calendo;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.calendo.utils.InputValidator;
 import com.example.calendo.utils.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText name;
@@ -35,7 +26,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         //Link UI elements
-        name = findViewById(R.id.name);
+        name = findViewById(R.id.account_name);
         lastName = findViewById(R.id.lastName);
         email = findViewById(R.id.email);
         pw1 = findViewById(R.id.pw);

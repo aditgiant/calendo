@@ -12,9 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewCategoryActivity"
+        <activity android:name=".EditCategoryActivity"
+            android:label="Edit category"
             android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".NewCategoryActivity"
             android:label="Add new category"
+            android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -167,7 +167,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
 
             //Now save the task
-            Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), datetoShow , "notCompleted");
+            Task todolist = new Task("#", title.getText().toString(),dropdownCategory.getSelectedItem().toString(),notes.getText().toString(), datetoShow , "uncompleted");
             usersRef.document(userID).collection("list").add(todolist);
             finish();
 

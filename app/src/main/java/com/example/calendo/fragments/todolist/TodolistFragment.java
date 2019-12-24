@@ -1,26 +1,19 @@
 package com.example.calendo.fragments.todolist;
 
 
-import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -31,33 +24,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calendo.EditTaskActivity;
-import com.example.calendo.LoginActivity;
 import com.example.calendo.MainActivity;
 import com.example.calendo.NewCategoryActivity;
-import com.example.calendo.SignUpActivity;
-import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.R;
+import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.adapters.MyAdapter;
-import com.example.calendo.utils.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
-import io.opencensus.common.ServerStatsFieldEnums;
 
 import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
@@ -141,13 +122,9 @@ public class TodolistFragment extends Fragment   {
 
                 updateTodolist();
 
-//               renderList(queryDocumentSnapshots);
-
             }
         });
 
-        //It should be called each time from the listener
-//        updateTodolist();
 
 
     }
@@ -162,7 +139,8 @@ public class TodolistFragment extends Fragment   {
 
         CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-        usersRef.orderBy("date").get()
+        //Take just the uncompleted tasks
+        usersRef.whereEqualTo("status", "uncompleted").get()
               .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -236,7 +214,7 @@ public class TodolistFragment extends Fragment   {
             String status = todolist.getStatus();
             String date ="";
 
-           if(!dates.equals("")) {
+           if(dates != null && !dates.equals("")) {
 
                 date = dates.substring(6, 8) + "/" + dates.substring(4, 6) + "/" + dates.substring(0, 4);
            }
@@ -315,7 +293,10 @@ public class TodolistFragment extends Fragment   {
         recyclerView.setLayoutManager(MyLayoutManager);
 
         //Terminate loading spinner started by the activity
-        ((MainActivity)getActivity()).endLoadingSpinner();
+        if(getActivity() != null){
+            ((MainActivity)getActivity()).endLoadingSpinner();
+        }
+
 
     }
 
@@ -351,8 +332,7 @@ public class TodolistFragment extends Fragment   {
 
                     CollectionReference usersRef = db.collection("Users").document(this.userID).collection("list");
 
-                    usersRef.whereEqualTo("category", item)
-                            .orderBy("date")
+                    usersRef.whereEqualTo("category", item).whereEqualTo("status", "uncompleted")
                             .get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 

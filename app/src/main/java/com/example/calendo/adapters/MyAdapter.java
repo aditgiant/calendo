@@ -118,17 +118,13 @@ public class MyAdapter extends ArrayAdapter<String> {
                             usersRef.document(userID).collection("list").document(IDs[position]).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    Toast.makeText(context, documentSnapshot.get("title").toString(), Toast.LENGTH_SHORT).show();
-
 
                                     if(documentSnapshot.get("status").toString().equals("uncompleted")){
                                         status[0] = "completed";
                                     }else{
                                        status[0] = "uncompleted";
                                     }
-                                    Task updateStatus = new Task("#", documentSnapshot.get("title").toString(), documentSnapshot.get("category").toString(), documentSnapshot.get("notes").toString(), documentSnapshot.get("date").toString(), status[0]);
-
-                                    usersRef.document(userID).collection("list").document(IDs[position]).set(updateStatus);
+                                    usersRef.document(userID).collection("list").document(IDs[position]).update("status", status[0]);
 
 
                                 }
