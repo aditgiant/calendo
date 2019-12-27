@@ -7,52 +7,42 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categoryList"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/categoryList">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
 
+
+    <TextView
+        android:id="@+id/categoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:padding="18sp"
+        android:paddingStart="18sp"
+        android:paddingTop="8sp"
+        android:paddingBottom="8sp"
+        android:textSize="30sp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/emptyTodo"
-        tools:layout_editor_absoluteY="-144dp"
         android:layout_width="match_parent"
         android:layout_height="543dp"
+        android:background="@color/colorWhite"
         android:visibility="invisible">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="334dp"
             android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
             android:gravity="center_horizontal|center_vertical"
             android:text="Your list is empty! 🤷🏻‍♂️"
             android:textColor="@color/colorPrimary"
             android:textSize="18dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.009" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="0dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginEnd="80dp"
-            android:layout_marginRight="80dp"
-            android:layout_marginBottom="72dp"
-            android:text="Press this button to add a new task! 👉"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

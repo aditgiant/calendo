@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,8 @@ import com.example.calendo.NewCategoryActivity;
 import com.example.calendo.R;
 import com.example.calendo.adapters.HorizontalAdapter;
 import com.example.calendo.adapters.MyAdapter;
+import com.example.calendo.adapters.MyViewHolder;
+import com.google.android.gms.common.util.Hex;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,6 +55,7 @@ public class TodolistFragment extends Fragment   {
     private RecyclerView recyclerView;
     private ConstraintLayout emptyTodo;
     private NotificationManagerCompat notificationManager;
+    private TextView categoryName;
 
     //Data
     private ArrayList<Task> todolist;
@@ -73,6 +77,7 @@ public class TodolistFragment extends Fragment   {
         listView = view.findViewById(R.id.listView);
         recyclerView = view.findViewById(R.id.categoryList);
         emptyTodo= view.findViewById(R.id.emptyTodo);
+        categoryName = view.findViewById(R.id.categoryName);
 
         //Retrieve userID
         SharedPreferences sharedPref = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
@@ -145,6 +150,9 @@ public class TodolistFragment extends Fragment   {
                   @Override
                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                       renderList(queryDocumentSnapshots);
+
+                      //You are refreshing the whole list
+                      categoryName.setText("All");
 
                   }
               });
@@ -263,10 +271,12 @@ public class TodolistFragment extends Fragment   {
 
         if(queryDocumentSnapshots.isEmpty()){
             listView.setVisibility(View.GONE);
+            categoryName.setVisibility(View.VISIBLE);
             emptyTodo.setVisibility(View.VISIBLE);
 
         }else {
             listView.setVisibility(View.VISIBLE);
+            categoryName.setVisibility(View.VISIBLE);
             emptyTodo.setVisibility(View.GONE);
         }
 
@@ -283,7 +293,13 @@ public class TodolistFragment extends Fragment   {
                 @Override
                 public void onItemClick(RecyclerView.ViewHolder holder) {
 
+                    //Filter list
                     filterList(categories.get(holder.getAdapterPosition()));
+
+                    //Set the list title if it is not the last one
+                    if(!categories.get(holder.getAdapterPosition()).equals("New category")){
+                        categoryName.setText(categories.get(holder.getAdapterPosition()));
+                    }
 
                     // Toast.makeText(getContext(), "Item position"+ categories.get(holder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
                 }

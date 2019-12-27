@@ -68,9 +68,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(view.getContext(),  "Position no: "+ position, Toast.LENGTH_LONG).show();
-
                 listener.onItemClick(holder);
-
 
             }
         });
