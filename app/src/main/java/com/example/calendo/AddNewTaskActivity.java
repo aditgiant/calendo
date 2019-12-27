@@ -116,6 +116,20 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dropdownCategory.setAdapter(adapter);
+
+        //Select the category from the Previous activity
+        Intent intent = getIntent();
+        String selectedCategory = intent.getStringExtra("category");
+        if(!selectedCategory.equals("All")){
+            int position=0;
+
+            //Search the string in the list and return the position
+            while( !selectedCategory.equals(categories.get(position))){
+                position++;
+            }
+
+            dropdownCategory.setSelection(position);
+        }
     }
 
     public void processDatePickerResult(int year, int month, int day) {

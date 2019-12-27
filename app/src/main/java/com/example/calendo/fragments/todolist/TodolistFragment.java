@@ -365,8 +365,7 @@ public class TodolistFragment extends Fragment   {
 
     }
 
-
-
-
-
+    public TextView getCategoryName() {
+        return categoryName;
+    }
 }

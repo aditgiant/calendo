@@ -216,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void addNewTask(View view) {
         Intent intent = new Intent(MainActivity.this, AddNewTaskActivity.class);
+        intent.putExtra("category", todolistFragment.getCategoryName().getText().toString());
         startActivityForResult(intent, TEXT_REQUEST);
 
     }
