@@ -68,7 +68,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(view.getContext(),  "Position no: "+ position, Toast.LENGTH_LONG).show();
-                holder.buttonCategory.setBackgroundColor(Color.BLUE);
 
                 listener.onItemClick(holder);
 
@@ -82,13 +81,13 @@ public class HorizontalAdapter extends RecyclerView.Adapter<MyViewHolder> {
                 //In the case of list added by the user, we skip the all category and the add new cateogry
 
 
-                //if(position != 0 && position == list.length-1){
+                if(position != 0 && position != list.length-1){
 
                     Intent i = new Intent(context, EditCategoryActivity.class);
                     i.putExtra("categoryName", holder.taskCategory.getText().toString());
                     context.startActivity(i);
 
-                //}
+                }
 
                 return true;
             }
