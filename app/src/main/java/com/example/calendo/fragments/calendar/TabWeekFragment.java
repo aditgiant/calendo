@@ -21,7 +21,7 @@ import com.example.calendo.adapters.HourAdapter;
  * A simple {@link Fragment} subclass.
  */
 public class TabWeekFragment extends Fragment {
-    private static final String TAG = "TabWeekFragment";
+    /*private static final String TAG = "TabWeekFragment";
     String activity[] = {".","00.00","","","","","","","",
             "01.00","","","","","","","",
             "02.00","","","","","","","",
@@ -48,7 +48,7 @@ public class TabWeekFragment extends Fragment {
             "23.00","","","","","","",""};
 
 //    String activity[] = {"lala", "lili", "lolo", "12.00", "lalala","23.00", "12.00","agdg","dsgdywegd","ououuuiuoiuouiuoiuouoiouiuo"};
-
+*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,10 +62,13 @@ public class TabWeekFragment extends Fragment {
         //Intent receiveIntent = getActivity().getIntent();
         //Log.d("Date selected : ", receiveIntent.getStringExtra("yearselect") );
 
+        /*
         GridView hourtable = view.findViewById(R.id.hourtable);
         HourAdapter hourAdapter = new HourAdapter(this.getContext(), activity);
         hourtable.setAdapter(hourAdapter);
         Log.d(TAG, hourAdapter.toString());
+
+         */
         return view;
     }
 
